@@ -1,0 +1,36 @@
+generated: '2026-08-25'
+method: probed
+source: >-
+  live anonymous responses from https://matchpointtx.com/wp-json observed 2026-08-25, plus a full
+  read of https://matchpointtx.com/ and /robots.txt
+limit_count: 0
+limits: []
+headers:
+  ratelimit_standard: []
+  x_ratelimit: []
+  retry_after: false
+  observed: >-
+    None. Response headers on GET /wp/v2/posts were: allow, link, x-content-type-options,
+    x-robots-tag, x-wp-total, x-wp-totalpages, x-cacheable, cache-control, x-cache, x-cache-group,
+    last-modified, cf-cache-status, cf-ray, alt-svc. No RateLimit-*, no X-RateLimit-*, no
+    Retry-After.
+exhaustion_status: null
+note: >-
+  Matchpoint Therapeutics documents no rate limits — it runs no developer program and no developer
+  documentation exists to state one. An honest zero: not "unlimited", but "unsignalled". Two
+  unpublished controls do sit in front of the surface and a consumer should assume them. First,
+  Cloudflare fronts every response (cf-ray on all of them) and can challenge or throttle at the
+  edge without any application-level signal. Second, WP Engine's object cache answers with
+  `x-cacheable: SHORT` and `cache-control: max-age=600, must-revalidate`, so a hot collection is
+  served from cache for ten minutes. The deployment also registers
+  /wpe/cache-plugin/v1/rate_limit_status, but that route is WP Engine's authenticated cache-plugin
+  administration endpoint, not a consumer-facing limit, and it is not part of the catalogued
+  contract. robots.txt sets `Disallow:` with no Crawl-delay, so no crawl budget is published
+  either.
+evidence:
+- url: https://matchpointtx.com/wp-json/wp/v2/posts?per_page=2
+  status: 200
+  finding: No rate-limit header of any family in the response.
+- url: https://matchpointtx.com/robots.txt
+  status: 200
+  finding: 'Yoast block: User-agent * / Disallow: (empty) / Sitemap. No Crawl-delay directive.'

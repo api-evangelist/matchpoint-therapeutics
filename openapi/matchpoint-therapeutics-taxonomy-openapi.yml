@@ -1,0 +1,432 @@
+openapi: 3.2.0
+info:
+  title: Matchpoint Therapeutics Content Taxonomy API
+  version: wp/v2
+  summary: Anonymously readable WordPress REST content API behind matchpointtx.com.
+  description: The read-only content surface Matchpoint Therapeutics exposes at https://matchpointtx.com/wp-json. Matchpoint Therapeutics is a Cambridge, Massachusetts biotechnology company founded in 2021
+    and launched publicly in October 2022 with $100 million in financing, discovering precision small-molecule covalent medicines for immune diseases and cancer on its Advanced Covalent Exploration (ACE)
+    platform. It runs no developer program and markets no product API. This document is an API Evangelist derivation of the WordPress `wp/v2` and `oembed/1.0` route index the site publishes at /wp-json/,
+    restricted to the operations that were verified to return data anonymously on 2026-08-25.
+  contact:
+    name: Matchpoint Therapeutics
+    url: https://matchpointtx.com/
+  x-api-evangelist-provenance: 'Derived by the API Evangelist enrichment pipeline from the live WordPress REST route index at https://matchpointtx.com/wp-json/ (222 routes across 13 namespaces) and verified
+    against live anonymous responses on 2026-08-25. Every parameter below appears verbatim in the route index `args` for that endpoint, and every collection count in a description was read from the `X-WP-Total`
+    response header on that date. Matchpoint Therapeutics publishes no OpenAPI, no developer documentation and no API reference for this surface; the humanURL in apis.yml points at the upstream WordPress
+    REST handbook that defines the wp/v2 contract. The deployment is served by WP Engine behind Cloudflare (x-powered-by: WP Engine, cf-ray on every response) and API responses carry `x-robots-tag: noindex`.
+    Write operations and the credentialed surface — POST/PUT/PATCH/DELETE everywhere, /wp/v2/users, /wp/v2/settings, /wp/v2/menus, /wp/v2/menu-items, /wp/v2/templates, /wp/v2/template-parts, the yoast/v1,
+    struck/v1, wordfence/v1, wpe/cache-plugin/v1, wpe_sign_on_plugin/v1, wp-site-health/v1, wp-block-editor/v1 and wp-abilities/v1 namespaces, and /oembed/1.0/proxy (observed 401) — are deliberately excluded.
+    Nothing here was obtained with credentials.'
+servers:
+- url: https://matchpointtx.com/wp-json
+  description: Production content API
+tags:
+- name: taxonomy
+  description: Categories, post tags and the team_types taxonomy. Only one category term exists; post_tag and team_types are registered but empty.
+paths:
+  /wp/v2/categories:
+    get:
+      tags:
+      - taxonomy
+      operationId: listCategories
+      summary: List post categories
+      description: Lists category terms. One term exists on this deployment — `uncategorized` (id 1), carrying all 5 news posts. Matchpoint has not organised its news archive taxonomically.
+      parameters:
+      - &id001
+        $ref: '#/components/parameters/Context'
+      - &id002
+        $ref: '#/components/parameters/Page'
+      - &id003
+        $ref: '#/components/parameters/PerPage'
+      - &id004
+        $ref: '#/components/parameters/Search'
+      - &id005
+        $ref: '#/components/parameters/Exclude'
+      - &id006
+        $ref: '#/components/parameters/Include'
+      - &id007
+        $ref: '#/components/parameters/Order'
+      - &id008
+        $ref: '#/components/parameters/Fields'
+      - &id009
+        name: orderby
+        in: query
+        description: Sort collection by term attribute.
+        schema:
+          type: string
+          enum:
+          - id
+          - include
+          - name
+          - slug
+          - include_slugs
+          - term_group
+          - description
+          - count
+          default: name
+      - &id010
+        name: hide_empty
+        in: query
+        description: Whether to hide terms not assigned to any posts.
+        schema:
+          type: boolean
+          default: false
+      - &id011
+        name: post
+        in: query
+        description: Limit result set to terms assigned to a specific post.
+        schema:
+          type: integer
+      - &id012
+        name: slug
+        in: query
+        description: Limit result set to terms with one or more specific slugs.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: parent
+        in: query
+        description: Limit result set to terms assigned to a specific parent.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: A page of results
+          headers:
+            X-WP-Total:
+              schema:
+                type: integer
+                examples:
+                - 1
+              description: Total number of matching items.
+            X-WP-TotalPages:
+              schema:
+                type: integer
+              description: Total number of pages available.
+            Link:
+              schema:
+                type: string
+              description: RFC 8288 pagination links (rel="next" / rel="prev").
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Term'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /wp/v2/categories/{id}:
+    get:
+      tags:
+      - taxonomy
+      operationId: getCategory
+      summary: Retrieve a category
+      description: Retrieves a single category term. Verified anonymously against term 1.
+      parameters:
+      - $ref: '#/components/parameters/Id'
+      - $ref: '#/components/parameters/Context'
+      - $ref: '#/components/parameters/Fields'
+      responses:
+        '200':
+          description: The term
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Term'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /wp/v2/tags:
+    get:
+      tags:
+      - taxonomy
+      operationId: listTags
+      summary: List post tags
+      description: Lists post_tag terms. The taxonomy is registered and anonymously reachable but empty — X-WP-Total was 0 at harvest time.
+      parameters:
+      - *id001
+      - *id002
+      - *id003
+      - *id004
+      - *id005
+      - *id006
+      - *id007
+      - *id008
+      - *id009
+      - *id010
+      - *id011
+      - *id012
+      responses:
+        '200':
+          description: A page of results
+          headers:
+            X-WP-Total:
+              schema:
+                type: integer
+                examples:
+                - 0
+              description: Total number of matching items.
+            X-WP-TotalPages:
+              schema:
+                type: integer
+              description: Total number of pages available.
+            Link:
+              schema:
+                type: string
+              description: RFC 8288 pagination links (rel="next" / rel="prev").
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Term'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /wp/v2/tags/{id}:
+    get:
+      tags:
+      - taxonomy
+      operationId: getTag
+      summary: Retrieve a post tag
+      description: Retrieves a single post_tag term. No term exists on this deployment, so every id returns rest_term_invalid.
+      parameters:
+      - $ref: '#/components/parameters/Id'
+      - $ref: '#/components/parameters/Context'
+      - $ref: '#/components/parameters/Fields'
+      responses:
+        '200':
+          description: The term
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Term'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /wp/v2/team_types:
+    get:
+      tags:
+      - taxonomy
+      operationId: listTeamTypes
+      summary: List team types
+      description: Lists team_types terms — the hierarchical taxonomy registered against the `team` custom post type to separate executives, directors, observers and founders. It is registered and reachable
+        but carries zero terms, so the grouping a reader sees on the site is presentational only and is not available through the API.
+      parameters:
+      - *id001
+      - *id002
+      - *id003
+      - *id004
+      - *id005
+      - *id006
+      - *id007
+      - *id008
+      - *id009
+      - *id010
+      - *id011
+      - *id012
+      - name: parent
+        in: query
+        description: Limit result set to terms assigned to a specific parent.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: A page of results
+          headers:
+            X-WP-Total:
+              schema:
+                type: integer
+                examples:
+                - 0
+              description: Total number of matching items.
+            X-WP-TotalPages:
+              schema:
+                type: integer
+              description: Total number of pages available.
+            Link:
+              schema:
+                type: string
+              description: RFC 8288 pagination links (rel="next" / rel="prev").
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Term'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /wp/v2/team_types/{id}:
+    get:
+      tags:
+      - taxonomy
+      operationId: getTeamType
+      summary: Retrieve a team type
+      description: Retrieves a single team_types term. No term exists on this deployment.
+      parameters:
+      - $ref: '#/components/parameters/Id'
+      - $ref: '#/components/parameters/Context'
+      - $ref: '#/components/parameters/Fields'
+      responses:
+        '200':
+          description: The term
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Term'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  parameters:
+    PerPage:
+      name: per_page
+      in: query
+      description: Maximum number of items to be returned in the result set.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+    Page:
+      name: page
+      in: query
+      description: Current page of the collection.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    Search:
+      name: search
+      in: query
+      description: Limit results to those matching a string.
+      schema:
+        type: string
+    Include:
+      name: include
+      in: query
+      description: Limit result set to specific IDs.
+      schema:
+        type: array
+        items:
+          type: integer
+    Exclude:
+      name: exclude
+      in: query
+      description: Ensure result set excludes specific IDs.
+      schema:
+        type: array
+        items:
+          type: integer
+    Order:
+      name: order
+      in: query
+      description: Order sort attribute ascending or descending.
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+        default: desc
+    Context:
+      name: context
+      in: query
+      description: Scope under which the request is made; determines fields present in the response. Anonymously only `view` and `embed` return data; `edit` returns 401.
+      schema:
+        type: string
+        enum:
+        - view
+        - embed
+        - edit
+        default: view
+    Fields:
+      name: _fields
+      in: query
+      description: Comma-separated allow-list of top-level response fields (WordPress REST global parameter).
+      schema:
+        type: string
+    Id:
+      name: id
+      in: path
+      required: true
+      description: Unique identifier for the object.
+      schema:
+        type: integer
+  schemas:
+    Error:
+      type: object
+      description: The WordPress REST error envelope. Not RFC 9457 problem+json.
+      required:
+      - code
+      - message
+      - data
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code.
+          examples:
+          - rest_post_invalid_id
+        message:
+          type: string
+          description: Human-readable error message.
+          examples:
+          - Invalid post ID.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: The HTTP status code.
+              examples:
+              - 404
+            params:
+              type: object
+              description: Per-parameter messages, present on rest_invalid_param.
+              additionalProperties:
+                type: string
+            details:
+              type: object
+              description: Per-parameter structured detail, present on rest_invalid_param.
+              additionalProperties:
+                type: object
+    Term:
+      type: object
+      description: A taxonomy term.
+      properties:
+        id:
+          type: integer
+        count:
+          type: integer
+        description:
+          type: string
+        link:
+          type: string
+          format: uri
+        name:
+          type: string
+        slug:
+          type: string
+        taxonomy:
+          type: string
+          examples:
+          - category
+        parent:
+          type: integer
+        meta:
+          type: object
+        yoast_head:
+          type: string
+        yoast_head_json:
+          type: object
+        _links:
+          type: object
+  responses:
+    BadRequest:
+      description: Invalid parameter (rest_invalid_param / rest_missing_callback_param)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: No object matches the requested identifier (rest_post_invalid_id / rest_term_invalid)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

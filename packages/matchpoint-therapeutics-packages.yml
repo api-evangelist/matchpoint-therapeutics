@@ -1,0 +1,50 @@
+generated: '2026-08-25'
+method: searched
+source: >-
+  registry searches (npm, PyPI, RubyGems, crates.io, NuGet, Maven Central, pkg.go.dev, Packagist)
+  and matchpointtx.com, 2026-08-25
+package_count: 0
+official_sdk_count: 0
+packages: []
+note: >-
+  Matchpoint Therapeutics ships no client libraries, in any language, on any registry. There is no
+  GitHub organisation, no SDK page, no CLI and no SourceCode link in apis.yml to derive candidates
+  from — the company runs no developer program at all, so the absence is expected rather than a
+  gap. No `SDKs` pointer is emitted in apis.yml because there is no official client library to
+  count; emitting one would credit a provider with an SDK surface it does not have. Consumers of
+  the WordPress REST content surface catalogued in this repo use a generic HTTP client or an
+  off-the-shelf third-party WordPress client, none of which is first-party and none of which is
+  recorded here.
+registry_probes:
+- registry: npm
+  query: matchpoint / matchpointtx / matchpoint-therapeutics
+  status: 200
+  finding: >-
+    No first-party package. Every hit belongs to an unrelated third party
+    (@agentutility/mcp-matchpoint, cordova-plugin-matchpoint-proguard, matchp).
+- registry: pypi
+  query: matchpoint
+  status: 200
+  finding: >-
+    `matchpoint` 1.1 exists but is a point-set registration library by an unrelated author, not a
+    Matchpoint Therapeutics client. `matchpointtx` returned 404.
+- registry: rubygems
+  query: matchpoint
+  status: 200
+  finding: No results.
+- registry: crates.io
+  query: matchpoint
+  status: 200
+  finding: No results.
+- registry: github
+  query: github.com/matchpoint-therapeutics
+  status: 404
+  finding: No such organisation.
+- registry: github
+  query: github.com/matchpointtx
+  status: 200
+  finding: >-
+    An account named "MTX" exists at this handle with no public repositories, no company field and
+    nothing tying it to Matchpoint Therapeutics. NOT attributed to the company and NOT wired as a
+    GitHubOrganization pointer — an ownership claim this pipeline cannot substantiate is worse than
+    a recorded absence.

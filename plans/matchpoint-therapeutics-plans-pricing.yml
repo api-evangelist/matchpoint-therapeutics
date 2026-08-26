@@ -1,0 +1,24 @@
+generated: '2026-08-25'
+method: searched
+source: https://matchpointtx.com/ (full site, 2026-08-25)
+plan_count: 0
+plans: []
+note: >-
+  Matchpoint Therapeutics publishes no plans, no pricing page and no commercial terms of any kind
+  for an API. It is a preclinical biotechnology company whose revenue model is research funding,
+  option-exercise fees, development and commercial milestones and royalties under partnership
+  agreements — the July 2025 Novartis exclusive option and licence agreement (up to $60 million
+  upfront and in research funding, up to $1 billion in total potential payments plus tiered
+  royalties) is the disclosed example. None of that is API-priced. The WordPress REST content
+  surface catalogued in this repo is free, unmetered and unadvertised, which is not a plan either.
+  There is no pricing page to link and no sign-up, so no `Pricing` and no `SignUp` pointer is
+  emitted in apis.yml.
+evidence:
+- url: https://matchpointtx.com/
+  status: 200
+  finding: >-
+    Single-page site — Science, Approach, Leadership, Careers anchors plus a news list. No pricing,
+    plans, products or sign-up section exists.
+- url: https://matchpointtx.com/wp-json/wp/v2/pages?per_page=100
+  status: 200
+  finding: 3 published pages total — homepage, privacy policy, terms of use. No pricing page exists to omit.

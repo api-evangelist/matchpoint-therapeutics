@@ -1,0 +1,131 @@
+generated: '2026-08-25'
+method: derived
+source: >-
+  openapi/*.yml in this repo + live response headers observed on https://matchpointtx.com/wp-json
+  on 2026-08-25
+note: >-
+  Cross-cutting request/response semantics of the Matchpoint Therapeutics content API. Matchpoint
+  publishes no API conventions documentation of its own; everything below is the WordPress REST
+  contract as it is actually deployed here, derived from the route index and confirmed against live
+  anonymous responses. Idempotency is deliberately NOT claimed — this deployment exposes no
+  idempotency key, no request-deduplication contract, and no anonymous write surface, so no
+  `Idempotency` pointer is emitted in apis.yml.
+authentication:
+  style: none
+  detail: >-
+    No credentials required and none accepted for discovery — the /wp-json/ index reports an empty
+    authentication array. See authentication/matchpoint-therapeutics-authentication.yml.
+idempotency:
+  supported: false
+  header: null
+  detail: >-
+    No Idempotency-Key header, no client-supplied request identifier, and no documented replay
+    semantics. All catalogued operations are GET and therefore idempotent by HTTP method alone,
+    which is not an idempotency contract.
+pagination:
+  style: page-number
+  params:
+    page: Current page of the collection (1-based).
+    per_page: Items per page. Minimum 1, maximum 100, default 10.
+    offset: Alternative absolute offset into the result set.
+  response_headers:
+    X-WP-Total: Total number of matching items.
+    X-WP-TotalPages: Total number of pages available.
+  link_header: >-
+    RFC 8288 Link header carrying rel="next" and rel="prev". Observed on
+    /wp/v2/posts?per_page=2 as <https://matchpointtx.com/wp-json/wp/v2/posts?per_page=2&page=2>; rel="next".
+  cors_exposure: >-
+    Access-Control-Expose-Headers advertises X-WP-Total, X-WP-TotalPages and Link, so browser
+    clients can read the pagination headers cross-origin.
+  bounds_error: >-
+    per_page above 100 returns 400 rest_invalid_param with a per-parameter details block, not a
+    clamp.
+field_selection:
+  supported: true
+  params:
+    _fields: Comma-separated allow-list of top-level response fields.
+    _embed: Inline embeddable resources (author, featured media, terms) under _embedded.
+    _envelope: Wrap the response body, status and headers in a single JSON envelope.
+  context:
+    param: context
+    values: [view, embed, edit]
+    detail: >-
+      Anonymously only `view` and `embed` return data; `edit` requires an authenticated user and
+      returns 401.
+sorting_and_filtering:
+  order: asc | desc (default desc)
+  orderby: Per-collection enum — date, id, title, slug, modified, author, include, relevance, menu_order.
+  date_windows: after, before, modified_after, modified_before (ISO 8601).
+  identity: include / exclude / slug.
+  full_text: search, with search_columns (post_title, post_content, post_excerpt).
+  taxonomy: categories, categories_exclude, tags, tags_exclude, team_types, tax_relation (AND | OR).
+metadata:
+  field: meta
+  detail: >-
+    A `meta` object is present on every post-like resource but only registered meta keys are
+    exposed; no custom keys are surfaced anonymously on this deployment.
+  extensions_observed:
+  - yoast_head and yoast_head_json — rendered and structured Yoast SEO metadata, including a
+    schema.org graph, inlined on every post, page, team member and taxonomy term.
+  - class_list — the CSS class list WordPress would render for the object.
+  - >-
+    No theme-added convenience fields. Unlike deployments running Avada or JetEngine, the bespoke
+    `matchpointtx` theme adds no featured_image_src or author_info shortcuts, so a featured image
+    must be resolved with a second request to /wp/v2/media/{id} or with _embed.
+request_tracing:
+  request_id_header: null
+  detail: >-
+    No provider request identifier. Cloudflare returns a cf-ray value on every response, which is
+    an edge trace token and not an application-level correlation id.
+versioning:
+  scheme: uri-path-namespace
+  current: wp/v2
+  detail: >-
+    Version is carried in the route namespace (wp/v2, oembed/1.0, acf/v3, customgf/v2, struck/v1,
+    yoast/v1, wp-abilities/v1). Matchpoint does not version this surface itself; it moves when
+    WordPress core and the installed plugins move. See
+    lifecycle/matchpoint-therapeutics-lifecycle.yml.
+error_envelope:
+  format: wordpress-rest
+  rfc9457: false
+  content_type: application/json
+  shape: '{ code: string, message: string, data: { status: int, params?: object, details?: object } }'
+  detail: >-
+    Not RFC 9457 problem+json — there is no `type` URI and no problem+json media type. See
+    errors/matchpoint-therapeutics-problem-types.yml.
+rate_limiting:
+  signaled: false
+  headers: []
+  detail: >-
+    No RateLimit-* or X-RateLimit-* headers are returned on /wp-json responses, and no limit is
+    published anywhere. The deployment does register WP Engine's
+    /wpe/cache-plugin/v1/rate_limit_status route, but that is an authenticated cache-plugin
+    administration endpoint, not a consumer-facing limit signal. robots.txt sets no Crawl-delay.
+    See rate-limits/matchpoint-therapeutics-rate-limits.yml.
+caching:
+  cache_control: 'max-age=600, must-revalidate on /wp-json collection responses'
+  headers_observed: [x-cacheable, x-cache, x-cache-group, cf-cache-status, last-modified]
+  detail: >-
+    WP Engine object cache (x-cacheable: SHORT) in front of the origin, Cloudflare in front of that.
+    Responses also carry x-robots-tag: noindex and x-content-type-options: nosniff.
+reversibility:
+  applicable: false
+  grade: na
+  dry_run_mode: na
+  idempotency: na
+  detail: >-
+    Every operation catalogued in this repo is a GET. The API has no anonymous write surface, so
+    there is nothing to reverse: no cancel, refund, void, undo, rollback or restore operation exists
+    or could exist for a consumer of this contract. reversibility, dry_run_mode and idempotency are
+    all `na` rather than 0 — an honest not-applicable for a read-only contract. The one write route
+    on the deployment, POST /customgf/v2/forms/{id}/submissions, is an unauthenticated Gravity Forms
+    contact-form submission that is deliberately excluded from the catalogued contract and was never
+    exercised; Matchpoint publishes no retraction path for a submitted form.
+  operations: []
+cross_links:
+  authentication: authentication/matchpoint-therapeutics-authentication.yml
+  errors: errors/matchpoint-therapeutics-problem-types.yml
+  lifecycle: lifecycle/matchpoint-therapeutics-lifecycle.yml
+  data_model: data-model/matchpoint-therapeutics-data-model.yml
+  conformance: conformance/matchpoint-therapeutics-conformance.yml
+  rate_limits: rate-limits/matchpoint-therapeutics-rate-limits.yml

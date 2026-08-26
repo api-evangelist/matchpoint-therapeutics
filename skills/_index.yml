@@ -1,0 +1,32 @@
+generated: '2026-08-25'
+method: generated
+source: >-
+  Authored by the API Evangelist enrichment pipeline from the specs in openapi/ and the artifacts in
+  conventions/, errors/ and data-model/. Matchpoint Therapeutics publishes no skills, no AGENTS.md
+  and no agent-facing documentation of any kind — searched matchpointtx.com on 2026-08-25.
+note: >-
+  Every operationId referenced below was verified against the specs in openapi/, which were
+  themselves derived from the live WordPress REST route index and confirmed against anonymous
+  responses. No operation is invented. All three skills are read-only.
+skills:
+- name: matchpoint-therapeutics-map-the-leadership-graph
+  file: matchpoint-therapeutics-map-the-leadership-graph.md
+  api: matchpoint-therapeutics:matchpoint-therapeutics-team-api
+  summary: >-
+    Pull the 19-person executive, board, observer and scientific-founder roster from the team custom
+    post type, and reconstruct the role grouping the empty team_types taxonomy does not provide.
+  operations: [listTeamMembers, getTeamMember, listTeamTypes, getMediaItem]
+- name: matchpoint-therapeutics-track-the-news-archive
+  file: matchpoint-therapeutics-track-the-news-archive.md
+  api: matchpoint-therapeutics:matchpoint-therapeutics-posts-api
+  summary: >-
+    Monitor announcements by date cursor and separate company-issued releases from reprinted
+    third-party coverage, which the flat taxonomy cannot do.
+  operations: [listPosts, getPost, listCategories]
+- name: matchpoint-therapeutics-inventory-the-public-surface
+  file: matchpoint-therapeutics-inventory-the-public-surface.md
+  api: matchpoint-therapeutics:matchpoint-therapeutics-discovery-api
+  summary: >-
+    Enumerate every anonymously reachable route, content type and asset from the 222-route index,
+    and record the defensible absences with their status codes.
+  operations: [getRouteIndex, listTypes, getType, listTaxonomies, getTaxonomy, listStatuses, searchContent, listMedia]

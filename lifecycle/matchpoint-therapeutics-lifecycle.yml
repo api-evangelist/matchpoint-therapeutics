@@ -1,0 +1,69 @@
+generated: '2026-08-25'
+method: derived
+source: >-
+  openapi/*.yml in this repo + live probes of https://matchpointtx.com on 2026-08-25
+note: >-
+  Matchpoint Therapeutics publishes no versioning policy, no deprecation policy, no SLA, no status
+  page and no changelog for this surface, because it does not present it as a product. The
+  lifecycle of the API is therefore the lifecycle of the WordPress install underneath it: it moves
+  when core and the installed plugins move, without notice to any consumer. No `StatusPage` and no
+  `Deprecation` pointer is emitted in apis.yml — there is nothing to point at.
+versioning:
+  scheme: uri-path-namespace
+  current: wp/v2
+  namespaces_registered:
+  - oembed/1.0
+  - wpe/cache-plugin/v1
+  - wpe_sign_on_plugin/v1
+  - struck/v1
+  - wordfence-login-security/v1
+  - wordfence/v1
+  - yoast/v1
+  - customgf/v2
+  - acf/v3
+  - wp/v2
+  - wp-site-health/v1
+  - wp-block-editor/v1
+  - wp-abilities/v1
+  policy_url: null
+  detail: >-
+    Upstream WordPress governs wp/v2 and oembed/1.0; the remaining eleven namespaces are registered
+    by plugins (WP Engine cache and SSO, Struck monitoring, Wordfence, Yoast SEO, a Gravity Forms
+    wrapper, Advanced Custom Fields) and by WordPress core's newer Abilities API. A consumer of this
+    surface is exposed to every one of those release trains.
+deprecation:
+  policy_url: null
+  sunset_header: false
+  deprecation_header: false
+  detail: No RFC 8594 Sunset or Deprecation header was returned on any probed response.
+sla:
+  url: null
+  uptime_target: null
+status_page: null
+support:
+  developer_support: none
+  detail: >-
+    No developer support channel exists. The only contact surface is the Gravity Forms contact form
+    on the homepage and the Greenhouse careers board.
+change_log:
+  url: null
+  detail: >-
+    No changelog for the API. The nearest dated artifact is the 5-item news archive, whose most
+    recent entry is 2025-07-24, and the homepage page object, last modified 2026-05-07.
+content_freshness:
+  news_archive_latest: '2025-07-24'
+  homepage_modified: '2026-05-07'
+  team_latest_modified: '2023-08-01'
+  detail: >-
+    Read from wp/v2 `modified` fields and the Yoast sitemap lastmod values on 2026-08-25. The news
+    archive has not moved in thirteen months and the team roster in three years, while the homepage
+    was edited four months ago — a site that is maintained but not actively published to.
+deprecated_operations: []
+platform:
+  cms: WordPress
+  theme: matchpointtx (bespoke)
+  host: WP Engine
+  edge: Cloudflare
+  evidence: >-
+    x-powered-by: WP Engine and cf-ray on every response; /wp-content/themes/matchpointtx/ asset
+    paths; staging origin mptxstaging.wpengine.com leaked in the guid of post 1.

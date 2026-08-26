@@ -1,0 +1,356 @@
+openapi: 3.2.0
+info:
+  title: Matchpoint Therapeutics Content Discovery API
+  version: wp/v2
+  summary: Anonymously readable WordPress REST content API behind matchpointtx.com.
+  description: The read-only content surface Matchpoint Therapeutics exposes at https://matchpointtx.com/wp-json. Matchpoint Therapeutics is a Cambridge, Massachusetts biotechnology company founded in 2021
+    and launched publicly in October 2022 with $100 million in financing, discovering precision small-molecule covalent medicines for immune diseases and cancer on its Advanced Covalent Exploration (ACE)
+    platform. It runs no developer program and markets no product API. This document is an API Evangelist derivation of the WordPress `wp/v2` and `oembed/1.0` route index the site publishes at /wp-json/,
+    restricted to the operations that were verified to return data anonymously on 2026-08-25.
+  contact:
+    name: Matchpoint Therapeutics
+    url: https://matchpointtx.com/
+  x-api-evangelist-provenance: 'Derived by the API Evangelist enrichment pipeline from the live WordPress REST route index at https://matchpointtx.com/wp-json/ (222 routes across 13 namespaces) and verified
+    against live anonymous responses on 2026-08-25. Every parameter below appears verbatim in the route index `args` for that endpoint, and every collection count in a description was read from the `X-WP-Total`
+    response header on that date. Matchpoint Therapeutics publishes no OpenAPI, no developer documentation and no API reference for this surface; the humanURL in apis.yml points at the upstream WordPress
+    REST handbook that defines the wp/v2 contract. The deployment is served by WP Engine behind Cloudflare (x-powered-by: WP Engine, cf-ray on every response) and API responses carry `x-robots-tag: noindex`.
+    Write operations and the credentialed surface — POST/PUT/PATCH/DELETE everywhere, /wp/v2/users, /wp/v2/settings, /wp/v2/menus, /wp/v2/menu-items, /wp/v2/templates, /wp/v2/template-parts, the yoast/v1,
+    struck/v1, wordfence/v1, wpe/cache-plugin/v1, wpe_sign_on_plugin/v1, wp-site-health/v1, wp-block-editor/v1 and wp-abilities/v1 namespaces, and /oembed/1.0/proxy (observed 401) — are deliberately excluded.
+    Nothing here was obtained with credentials.'
+servers:
+- url: https://matchpointtx.com/wp-json
+  description: Production content API
+tags:
+- name: discovery
+  description: Route, type, taxonomy and status discovery documents.
+paths:
+  /:
+    get:
+      tags:
+      - discovery
+      operationId: getRouteIndex
+      summary: Retrieve the REST route index
+      description: The root discovery document. Returns site identity, the 13 registered namespaces, an empty `authentication` array and the full 222-route map with per-endpoint argument schemas. This is
+        the only machine-readable contract Matchpoint Therapeutics publishes, and every operation in this repo was derived from it.
+      parameters:
+      - $ref: '#/components/parameters/Context'
+      - name: namespace
+        in: query
+        description: Restrict the index to a single namespace.
+        schema:
+          type: string
+          examples:
+          - wp/v2
+      responses:
+        '200':
+          description: The route index
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteIndex'
+  /wp/v2:
+    get:
+      tags:
+      - discovery
+      operationId: getWpV2Index
+      summary: Retrieve the wp/v2 namespace index
+      description: The route index restricted to the wp/v2 namespace — 118 of the 222 routes.
+      parameters:
+      - $ref: '#/components/parameters/Context'
+      responses:
+        '200':
+          description: The namespace index
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteIndex'
+  /wp/v2/types:
+    get:
+      tags:
+      - discovery
+      operationId: listTypes
+      summary: List registered post types
+      description: Lists the registered post types. Twelve are registered; `team` is the only company-specific one, and only post, page, attachment and team carry anonymously readable collections.
+      parameters:
+      - $ref: '#/components/parameters/Context'
+      responses:
+        '200':
+          description: Map of type slug to descriptor
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/TypeDescriptor'
+  /wp/v2/types/{type}:
+    get:
+      tags:
+      - discovery
+      operationId: getType
+      summary: Retrieve a post type
+      description: Retrieves a single post-type descriptor. Verified anonymously against `team`, which reports rest_base `team` and taxonomy `team_types`.
+      parameters:
+      - name: type
+        in: path
+        required: true
+        description: An alphanumeric identifier for the post type.
+        schema:
+          type: string
+          examples:
+          - team
+      - $ref: '#/components/parameters/Context'
+      responses:
+        '200':
+          description: The type descriptor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TypeDescriptor'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /wp/v2/taxonomies:
+    get:
+      tags:
+      - discovery
+      operationId: listTaxonomies
+      summary: List registered taxonomies
+      description: Lists the registered taxonomies — category, post_tag, nav_menu, wp_pattern_category and team_types.
+      parameters:
+      - $ref: '#/components/parameters/Context'
+      - name: type
+        in: query
+        description: Limit results to taxonomies associated with a specific post type.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Map of taxonomy slug to descriptor
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/TaxonomyDescriptor'
+  /wp/v2/taxonomies/{taxonomy}:
+    get:
+      tags:
+      - discovery
+      operationId: getTaxonomy
+      summary: Retrieve a taxonomy
+      description: Retrieves a single taxonomy descriptor. Verified anonymously against `team_types`.
+      parameters:
+      - name: taxonomy
+        in: path
+        required: true
+        description: An alphanumeric identifier for the taxonomy.
+        schema:
+          type: string
+          examples:
+          - team_types
+      - $ref: '#/components/parameters/Context'
+      responses:
+        '200':
+          description: The taxonomy descriptor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaxonomyDescriptor'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /wp/v2/statuses:
+    get:
+      tags:
+      - discovery
+      operationId: listStatuses
+      summary: List post statuses
+      description: Lists the post statuses visible to the caller. Anonymously only `publish` is returned.
+      parameters:
+      - $ref: '#/components/parameters/Context'
+      responses:
+        '200':
+          description: Map of status slug to descriptor
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/StatusDescriptor'
+  /wp/v2/statuses/{status}:
+    get:
+      tags:
+      - discovery
+      operationId: getStatus
+      summary: Retrieve a post status
+      description: Retrieves a single status descriptor. Verified anonymously against `publish`.
+      parameters:
+      - name: status
+        in: path
+        required: true
+        description: An alphanumeric identifier for the status.
+        schema:
+          type: string
+          examples:
+          - publish
+      - $ref: '#/components/parameters/Context'
+      responses:
+        '200':
+          description: The status descriptor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusDescriptor'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  parameters:
+    Context:
+      name: context
+      in: query
+      description: Scope under which the request is made; determines fields present in the response. Anonymously only `view` and `embed` return data; `edit` returns 401.
+      schema:
+        type: string
+        enum:
+        - view
+        - embed
+        - edit
+        default: view
+  schemas:
+    Error:
+      type: object
+      description: The WordPress REST error envelope. Not RFC 9457 problem+json.
+      required:
+      - code
+      - message
+      - data
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code.
+          examples:
+          - rest_post_invalid_id
+        message:
+          type: string
+          description: Human-readable error message.
+          examples:
+          - Invalid post ID.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: The HTTP status code.
+              examples:
+              - 404
+            params:
+              type: object
+              description: Per-parameter messages, present on rest_invalid_param.
+              additionalProperties:
+                type: string
+            details:
+              type: object
+              description: Per-parameter structured detail, present on rest_invalid_param.
+              additionalProperties:
+                type: object
+    RouteIndex:
+      type: object
+      description: The WordPress REST route index — the machine-readable contract this deployment publishes.
+      properties:
+        name:
+          type: string
+          examples:
+          - Matchpoint Therapeutics
+        description:
+          type: string
+        url:
+          type: string
+          format: uri
+        home:
+          type: string
+          format: uri
+        gmt_offset:
+          type: number
+        timezone_string:
+          type: string
+        namespaces:
+          type: array
+          items:
+            type: string
+          description: 13 namespaces registered at harvest time.
+        authentication:
+          type: array
+          items:
+            type: object
+          description: Empty on this deployment — no authentication scheme is advertised for discovery.
+        routes:
+          type: object
+          description: Route pattern to endpoint descriptor, including per-endpoint `args`.
+        _links:
+          type: object
+    TypeDescriptor:
+      type: object
+      properties:
+        description:
+          type: string
+        hierarchical:
+          type: boolean
+        has_archive:
+          type: boolean
+        name:
+          type: string
+        slug:
+          type: string
+        icon:
+          type: string
+        taxonomies:
+          type: array
+          items:
+            type: string
+        rest_base:
+          type: string
+        rest_namespace:
+          type: string
+        _links:
+          type: object
+    TaxonomyDescriptor:
+      type: object
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        types:
+          type: array
+          items:
+            type: string
+        hierarchical:
+          type: boolean
+        rest_base:
+          type: string
+        rest_namespace:
+          type: string
+        _links:
+          type: object
+    StatusDescriptor:
+      type: object
+      properties:
+        name:
+          type: string
+        public:
+          type: boolean
+        queryable:
+          type: boolean
+        slug:
+          type: string
+        date_floating:
+          type: boolean
+        _links:
+          type: object
+  responses:
+    NotFound:
+      description: No object matches the requested identifier (rest_post_invalid_id / rest_term_invalid)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

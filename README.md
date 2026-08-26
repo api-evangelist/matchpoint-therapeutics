@@ -64,5 +64,33 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Matchpoint Therapeutics is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://www.nasdaqprivatemarket.com/
+Matchpoint Therapeutics is a privately held biotechnology company in Watertown, Massachusetts
+(Cambridge at launch) discovering precision small-molecule covalent medicines for immune diseases
+and cancer on its Advanced Covalent Exploration (ACE) platform. Founded by covalent-chemistry,
+proteomics and computational-science researchers from Stanford University and Harvard Medical
+School, it closed a $30M seed round co-led by Atlas Venture and Access Biotechnology in November
+2021 and launched publicly in October 2022 with $100M in total financing after a $70M Series A led
+by Sanofi Ventures. In July 2025 it entered an exclusive option and licence agreement with Novartis
+for oral covalent inhibitors directed at a transcription factor linked to multiple inflammatory
+diseases.
+
+## API surface
+
+Matchpoint Therapeutics runs **no developer program**. There is no developer portal, no API
+documentation, no API reference, no SDK, no CLI, no MCP server, no agent card, no sandbox, no
+pricing and no sign-up — each verified by probe on 2026-08-25, not assumed.
+
+The only machine-readable surface reachable without credentials is the **WordPress REST content
+API** behind `matchpointtx.com` — 222 routes across 13 namespaces at
+[`/wp-json/`](https://matchpointtx.com/wp-json/). The nine OpenAPI documents in `openapi/` are API
+Evangelist derivations of that live route index, restricted to the operations verified to return
+data anonymously. The richest of them is the `team` custom post type: 19 leadership, board,
+observer and scientific-founder biographies.
+
+## Links
+
+- https://matchpointtx.com/
+- https://matchpointtx.com/feed/
+- https://boards.greenhouse.io/matchpointtx
+- https://www.linkedin.com/company/matchpoint-therapeutics · https://twitter.com/matchpointtx
+- https://www.nasdaqprivatemarket.com/company/matchpoint-therapeutics/ · https://equityzen.com/company/matchpointtherapeutics/

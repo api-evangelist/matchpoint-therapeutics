@@ -1,0 +1,47 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Matchpoint Therapeutics content API
+  version: 1.0.0
+x-generated: '2026-08-25'
+x-method: generated
+x-source: >-
+  Records the enhancements API Evangelist added on top of the raw WordPress REST route index at
+  https://matchpointtx.com/wp-json/ when deriving the nine specs in openapi/. The route index is
+  not an OpenAPI document, so there is no harvested original to preserve — this overlay documents
+  what we contributed rather than patching a provider-published file, and it applies uniformly to
+  every spec in openapi/.
+extends: openapi/matchpoint-therapeutics-discovery-openapi.yml
+actions:
+- target: $.info
+  update:
+    x-apievangelist-enhancement: >-
+      Title, summary, contact and a provenance statement were authored by API Evangelist. WordPress
+      publishes none of these; the route index carries only site name and URL.
+- target: $.info
+  update:
+    x-apievangelist-derivation: >-
+      Operations were restricted to those verified to return data anonymously on 2026-08-25. Write
+      operations and every 401/403 route were excluded rather than transcribed, so the spec
+      describes what a public consumer can actually call.
+- target: $.paths.*.get
+  update:
+    x-apievangelist-enhancement: >-
+      operationId, summary and tags were authored by API Evangelist. The WordPress route index
+      supplies neither an operation identifier nor a human summary, so an untouched transcription
+      would score zero on every contract-content check and would be unusable for tool generation.
+- target: $.paths.*.get.responses
+  update:
+    x-apievangelist-enhancement: >-
+      Response schemas and the X-WP-Total / X-WP-TotalPages / Link headers were modelled from live
+      response bodies and headers. The route index describes request `args` only and says nothing
+      about what comes back.
+- target: $.components.schemas.Error
+  update:
+    x-apievangelist-enhancement: >-
+      The WordPress error envelope was reconstructed from provoked live errors and cross-linked to
+      errors/matchpoint-therapeutics-problem-types.yml. It is explicitly NOT RFC 9457.
+- target: $.tags
+  update:
+    x-apievangelist-enhancement: >-
+      Nine tag groups (posts, pages, team, media, taxonomy, comments, search, discovery, oembed)
+      were introduced to split a 222-route flat namespace into per-resource contracts.

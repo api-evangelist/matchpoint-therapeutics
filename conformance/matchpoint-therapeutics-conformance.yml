@@ -1,0 +1,111 @@
+generated: '2026-08-25'
+method: derived
+source: >-
+  openapi/*.yml in this repo + live anonymous probes of https://matchpointtx.com on 2026-08-25
+note: >-
+  Which cross-cutting and domain standards the Matchpoint Therapeutics content API actually
+  conforms to. Matchpoint publishes no compliance claims, no certifications page and no trust
+  centre, so no `Compliance` or `TrustCenter` pointer is emitted in apis.yml — the absence is the
+  finding, not an omission by this pipeline.
+standards:
+- id: openapi-3.2
+  conforms: true
+  evidence: >-
+    Not published by the provider. The nine specs in openapi/ are API Evangelist derivations of the
+    live route index; Matchpoint publishes no OpenAPI of its own.
+- id: oauth2
+  conforms: false
+  evidence: No oauth2 securityScheme; /wp-json/ reports an empty authentication array.
+- id: oidc
+  conforms: false
+  evidence: /.well-known/openid-configuration returned 404.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: >-
+    Errors use the WordPress envelope { code, message, data.status } with content-type
+    application/json. No type URI, no application/problem+json.
+- id: rfc8288-web-linking
+  conforms: true
+  evidence: >-
+    Link header with rel="next"/rel="prev" observed on GET /wp/v2/posts?per_page=2, and _links
+    HAL-style relations (self, collection, about, author, wp:term, wp:attachment, curies) on every
+    resource.
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: /.well-known/security.txt returned 404.
+- id: rfc8615-well-known
+  conforms: false
+  evidence: Every /.well-known/ path probed returned 404. See well-known/matchpoint-therapeutics-well-known.yml.
+- id: rfc8594-sunset-header
+  conforms: false
+  evidence: No Sunset or Deprecation header on any response; no deprecation policy published.
+- id: json-api
+  conforms: false
+  evidence: Bespoke WordPress JSON shapes; no application/vnd.api+json.
+- id: odata
+  conforms: false
+  evidence: No $metadata surface.
+- id: scim2
+  conforms: false
+  evidence: No urn:ietf:params:scim:schemas URNs; /wp/v2/users is 401-gated.
+- id: pagination-page-number
+  conforms: true
+  evidence: page / per_page / offset with X-WP-Total and X-WP-TotalPages response headers.
+- id: idempotency
+  conforms: false
+  evidence: No Idempotency-Key header and no anonymous write surface.
+- id: cors
+  conforms: true
+  evidence: >-
+    Access-Control-Allow-Headers and Access-Control-Expose-Headers (X-WP-Total, X-WP-TotalPages,
+    Link) returned on /wp-json responses.
+- id: oembed-1.0
+  conforms: true
+  evidence: >-
+    GET /oembed/1.0/embed?url=https://matchpointtx.com/ returned a valid oEmbed 1.0 rich response
+    (version 1.0, provider_name, type rich, html, width 600, height 338).
+- id: sitemaps-xml
+  conforms: true
+  evidence: Yoast-generated sitemap index at /sitemap_index.xml with page, post, category and author sitemaps.
+- id: schema-org
+  conforms: true
+  evidence: >-
+    Yoast emits a schema.org @graph (Organization, WebSite, WebPage, BreadcrumbList) as
+    application/ld+json in page HTML and as yoast_head_json on every REST resource.
+- id: rss-2.0
+  conforms: true
+  evidence: /feed/ returns a WordPress RSS 2.0 feed for the 5-item news archive.
+domain_standards:
+  sector: biotechnology / pharmaceutical drug discovery
+  regime_standards_probed:
+  - id: hl7-fhir
+    conforms: false
+    evidence: >-
+      No FHIR resource shapes, no /fhir base, no CapabilityStatement. Matchpoint is a preclinical
+      discovery company with no clinical-data exchange surface.
+  - id: cdisc-sdtm-define-xml
+    conforms: false
+    evidence: No trial data, submission datasets or define.xml published; the pipeline is preclinical.
+  - id: clinicaltrials-gov-ctti
+    conforms: false
+    evidence: >-
+      No registered trial identifiers are published on the site, consistent with a company whose
+      lead programme is at development-candidate selection.
+  - id: pistoia-alliance-idmp
+    conforms: false
+    evidence: No IDMP/SPL identifiers or product data published.
+  - id: gs1-gtin-udi
+    conforms: false
+    evidence: No commercialised product; no identifiers.
+  finding: >-
+    REWARD-ONLY, and correctly unrewarded. The drug-discovery sector has real domain standards
+    (FHIR, CDISC, IDMP), but they attach to clinical development and commercialised product, and a
+    preclinical platform company with a single partnered programme has nothing yet to express in
+    them. No domain-standard conformance is asserted, and none is invented to fill the slot.
+compliance_program:
+  published: false
+  certifications: []
+  evidence: >-
+    No trust centre, no SOC 2 / ISO 27001 / HIPAA / GDPR representation, no security page. The
+    privacy policy and terms of use are the only governance documents published.
+    probe-security-programs.py returned vdp=none trust=none on 2026-08-25.

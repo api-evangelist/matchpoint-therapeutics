@@ -1,0 +1,69 @@
+generated: '2026-08-25'
+method: derived
+status: candidate
+source: openapi/*.yml in this repo
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: none
+  verified: derived
+note: >-
+  Matchpoint Therapeutics ships NO MCP server — neither a hosted remote endpoint nor a local stdio
+  package. Searched npm, the MCP registries and matchpointtx.com on 2026-08-25 and found nothing
+  first-party. The tools below are a DERIVED CANDIDATE set, one per anonymously readable operation
+  in openapi/, and they do not exist anywhere an agent can reach today. Because no server exists,
+  NO `MCPServer` pointer and NO `ToolCrosswalk` pointer is emitted in apis.yml: a candidate is not
+  an agent surface, and pointing at one would credit the provider with 16 rubric points for
+  something nobody can call. The deployment does register WordPress core's `wp-abilities/v1`
+  namespace — the surface an official WordPress MCP bridge would expose — but every route in it
+  returned 401 rest_forbidden anonymously, so even that latent capability is closed.
+server:
+  name: matchpoint-therapeutics
+  transport: null
+  url: null
+tools:
+- name: list_team_members
+  description: List the 19 published Matchpoint leadership, board and scientific-founder biographies.
+  source_operation: openapi/matchpoint-therapeutics-team-openapi.yml#listTeamMembers
+- name: get_team_member
+  description: Retrieve one team member biography by id.
+  source_operation: openapi/matchpoint-therapeutics-team-openapi.yml#getTeamMember
+- name: list_news_posts
+  description: List the company news archive (press releases and third-party coverage).
+  source_operation: openapi/matchpoint-therapeutics-posts-openapi.yml#listPosts
+- name: get_news_post
+  description: Retrieve one news post by id, including full rendered body.
+  source_operation: openapi/matchpoint-therapeutics-posts-openapi.yml#getPost
+- name: list_pages
+  description: List the corporate pages — homepage, privacy policy, terms of use.
+  source_operation: openapi/matchpoint-therapeutics-pages-openapi.yml#listPages
+- name: get_page
+  description: Retrieve one corporate page by id.
+  source_operation: openapi/matchpoint-therapeutics-pages-openapi.yml#getPage
+- name: search_content
+  description: Cross-content search over posts, pages and team members.
+  source_operation: openapi/matchpoint-therapeutics-search-openapi.yml#searchContent
+- name: list_media
+  description: List the 43 media-library image attachments.
+  source_operation: openapi/matchpoint-therapeutics-media-openapi.yml#listMedia
+- name: get_media_item
+  description: Retrieve one media attachment and its source_url by id.
+  source_operation: openapi/matchpoint-therapeutics-media-openapi.yml#getMediaItem
+- name: list_categories
+  description: List news categories.
+  source_operation: openapi/matchpoint-therapeutics-taxonomy-openapi.yml#listCategories
+- name: get_route_index
+  description: Retrieve the 222-route WordPress REST discovery document.
+  source_operation: openapi/matchpoint-therapeutics-discovery-openapi.yml#getRouteIndex
+- name: get_oembed
+  description: Retrieve an oEmbed 1.0 rich embed for a matchpointtx.com URL.
+  source_operation: openapi/matchpoint-therapeutics-oembed-openapi.yml#getOEmbed
+x-evidence:
+  searched: '2026-08-25'
+  npm_query: 'matchpoint / matchpointtx / matchpoint-therapeutics — no first-party MCP package'
+  wp_abilities_probe:
+    url: https://matchpointtx.com/wp-json/wp-abilities/v1/abilities
+    status: 401
+    code: rest_forbidden

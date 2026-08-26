@@ -1,0 +1,118 @@
+generated: '2026-08-25'
+method: derived
+source: >-
+  openapi/*.yml in this repo + live anonymous probes of https://matchpointtx.com/wp-json on
+  2026-08-25
+summary:
+  types: []
+  api_key_in: []
+  oauth2_flows: []
+  public_read: true
+note: >-
+  The Matchpoint Therapeutics content API declares no security schemes and requires no credentials
+  for any operation catalogued in this repo. The WordPress REST index at /wp-json/ reports an empty
+  `authentication` array, which means no authentication provider (application passwords over Basic,
+  OAuth 1.0a, JWT) is registered for discovery on this deployment. Matchpoint publishes no developer
+  authentication documentation because it runs no developer program; the read surface is simply
+  open, and everything that is not open is closed to an authenticated WordPress user rather than to
+  an API consumer. `0-working/derive-authentication.py` produced no profile for this provider
+  precisely because there is no securityScheme to derive one from — that absence is the finding.
+schemes: []
+anonymous_access:
+  readable:
+  - GET /
+  - GET /wp/v2
+  - GET /wp/v2/posts
+  - GET /wp/v2/posts/{id}
+  - GET /wp/v2/pages
+  - GET /wp/v2/pages/{id}
+  - GET /wp/v2/team
+  - GET /wp/v2/team/{id}
+  - GET /wp/v2/team_types
+  - GET /wp/v2/media
+  - GET /wp/v2/media/{id}
+  - GET /wp/v2/categories
+  - GET /wp/v2/categories/{id}
+  - GET /wp/v2/tags
+  - GET /wp/v2/comments
+  - GET /wp/v2/search
+  - GET /wp/v2/types
+  - GET /wp/v2/types/{type}
+  - GET /wp/v2/taxonomies
+  - GET /wp/v2/taxonomies/{taxonomy}
+  - GET /wp/v2/statuses
+  - GET /wp/v2/statuses/{status}
+  - GET /oembed/1.0/embed
+  gated:
+  - path: /wp/v2/users
+    status: 401
+    code: rest_user_cannot_view
+  - path: /wp/v2/settings
+    status: 401
+    code: rest_forbidden
+  - path: /wp/v2/menus
+    status: 401
+    code: rest_cannot_view
+  - path: /wp/v2/menu-items
+    status: 401
+    code: rest_cannot_view
+  - path: /wp/v2/themes
+    status: 401
+    code: rest_cannot_view_themes
+  - path: /wp/v2/plugins
+    status: 401
+    code: rest_cannot_view_plugins
+  - path: /wp/v2/block-types
+    status: 401
+    code: rest_block_type_cannot_view
+  - path: /wp/v2/font-collections
+    status: 401
+    code: rest_cannot_read
+  - path: /wp/v2/icons
+    status: 401
+    code: rest_cannot_view
+  - path: /wp/v2/templates
+    status: 401
+    code: rest_cannot_manage_templates
+  - path: /wp/v2/template-parts
+    status: 401
+    code: rest_cannot_manage_templates
+  - path: /wp/v2/sidebars
+    status: 401
+    code: rest_cannot_manage_widgets
+  - path: /wp/v2/widget-types
+    status: 401
+    code: rest_cannot_manage_widgets
+  - path: /wp-abilities/v1/abilities
+    status: 401
+    code: rest_forbidden
+    note: >-
+      The WordPress Abilities API — the core surface an MCP bridge would expose. Registered on this
+      deployment but closed to anonymous callers, so no agent-callable tool list is reachable.
+  - path: /wp-abilities/v1/categories
+    status: 401
+    code: rest_forbidden
+  - path: /struck/v1/logs
+    status: 401
+    code: rest_forbidden
+  - path: /struck/v1/ssl
+    status: 401
+    code: rest_forbidden
+  - path: /oembed/1.0/proxy
+    status: 401
+    code: rest_forbidden
+  - path: /acf/v3/options/{option_name}
+    status: 403
+    code: forbidden
+  write_operations: >-
+    Every POST/PUT/PATCH/DELETE route in the 222-route index requires an authenticated WordPress
+    user. None were exercised — the pipeline reads only. /customgf/v2/forms/{id}/submissions is the
+    single anonymous-write candidate on the deployment (a Gravity Forms submission endpoint); it was
+    NOT exercised, and the sibling GET /customgf/v2/forms/1 returned HTTP 500, so no form id is
+    known to be valid.
+x-evidence:
+  probed: '2026-08-25'
+  index: https://matchpointtx.com/wp-json/
+  index_authentication_field: []
+  namespaces: 13
+  routes: 222

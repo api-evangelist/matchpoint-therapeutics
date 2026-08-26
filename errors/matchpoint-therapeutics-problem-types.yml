@@ -1,0 +1,111 @@
+generated: '2026-08-25'
+method: derived
+source: >-
+  openapi/*.yml in this repo + live anonymous error responses observed on
+  https://matchpointtx.com/wp-json on 2026-08-25
+format: wordpress-rest
+rfc9457: false
+note: >-
+  Matchpoint Therapeutics publishes no error reference — it runs no developer program — so every
+  entry below was read from a live response the pipeline actually provoked, not from documentation.
+  The envelope is the WordPress REST error object, not RFC 9457 problem+json: there is no `type`
+  URI, no `title`/`detail` split and no application/problem+json media type. Machine consumers
+  should switch on the string `code`, not on the HTTP status, because several distinct capability
+  failures share status 401.
+envelope:
+  content_type: application/json
+  shape: '{ code: string, message: string, data: { status: int, params?: object, details?: object } }'
+  example_field_notes:
+    code: Stable machine-readable identifier. The only reliable discriminator.
+    message: Human-readable, localisable, not stable.
+    data.status: Mirrors the HTTP status code.
+    data.params: Present on rest_invalid_param / rest_missing_callback_param — array of offending parameter names.
+    data.details: Present on rest_invalid_param — per-parameter structured reason.
+problems:
+- status: 400
+  code: rest_invalid_param
+  title: Invalid parameter
+  detail: A query parameter failed its schema. `data.details` names the parameter and the constraint.
+  remediation: Read data.params and data.details; per_page above 100 is the common cause.
+  observed: GET /wp/v2/posts?per_page=500
+- status: 400
+  code: rest_missing_callback_param
+  title: Missing required parameter
+  detail: A required parameter was not supplied. `data.params` lists every missing name.
+  remediation: Supply every name in data.params.
+  observed: 'GET /wp/v2/view-config -> {"params":["kind","name"]}; GET /struck/v1/summary -> {"params":["start_date","end_date"]}'
+- status: 401
+  code: rest_forbidden
+  title: Not permitted
+  detail: The route requires an authenticated WordPress user. The generic form.
+  remediation: Not resolvable by an API consumer — no credential is issued to the public.
+  observed: GET /wp/v2/settings, GET /wp-abilities/v1/abilities, GET /oembed/1.0/proxy, GET /struck/v1/ssl
+- status: 401
+  code: rest_user_cannot_view
+  title: Cannot list users
+  detail: The user directory is closed to anonymous callers on this deployment.
+  remediation: Use /wp/v2/team instead — the 19 named people the company publishes are a custom post type, not WordPress users.
+  observed: GET /wp/v2/users
+- status: 401
+  code: rest_cannot_view
+  title: Cannot view resource
+  detail: Menu and menu-item administration surfaces.
+  observed: GET /wp/v2/menus, GET /wp/v2/menu-items, GET /wp/v2/icons
+- status: 401
+  code: rest_cannot_view_themes
+  title: Cannot view themes
+  observed: GET /wp/v2/themes
+- status: 401
+  code: rest_cannot_view_plugins
+  title: Cannot view plugins
+  observed: GET /wp/v2/plugins
+- status: 401
+  code: rest_block_type_cannot_view
+  title: Cannot view block types
+  observed: GET /wp/v2/block-types
+- status: 401
+  code: rest_cannot_read
+  title: Cannot read font collections
+  observed: GET /wp/v2/font-collections
+- status: 401
+  code: rest_cannot_manage_templates
+  title: Cannot manage templates
+  observed: GET /wp/v2/templates, GET /wp/v2/template-parts
+- status: 401
+  code: rest_cannot_manage_widgets
+  title: Cannot manage widgets
+  observed: GET /wp/v2/sidebars, GET /wp/v2/widget-types
+- status: 403
+  code: forbidden
+  title: Forbidden
+  detail: >-
+    The Advanced Custom Fields options route answers with a bare `forbidden` code rather than the
+    WordPress `rest_*` family — a plugin that does not follow the core error convention.
+  observed: GET /acf/v3/options/{option_name}
+- status: 404
+  code: rest_post_invalid_id
+  title: Invalid post ID
+  detail: No object of the requested post type carries that numeric identifier.
+  remediation: Enumerate the collection; IDs are sparse (media id 1 does not exist here).
+  observed: GET /wp/v2/media/1
+  source_operation: openapi/matchpoint-therapeutics-media-openapi.yml#getMediaItem
+- status: 404
+  code: rest_term_invalid
+  title: Term does not exist
+  detail: No taxonomy term carries that identifier. On this deployment post_tag and team_types are empty, so every id fails.
+  source_operation: openapi/matchpoint-therapeutics-taxonomy-openapi.yml#getTag
+- status: 404
+  code: rest_no_route
+  title: No route was found
+  detail: The URL matched no registered route in the requested namespace.
+- status: 500
+  code: null
+  title: Server error
+  detail: >-
+    GET /customgf/v2/forms/1 returned HTTP 500 with no JSON error envelope — an unguarded plugin
+    route that faults instead of returning 404 for an unknown form id. Recorded because it is the
+    only non-envelope failure observed on the deployment.
+  observed: GET /customgf/v2/forms/1
+x-evidence:
+  probed: '2026-08-25'
+  host: https://matchpointtx.com

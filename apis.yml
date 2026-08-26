@@ -1,18 +1,255 @@
 aid: matchpoint-therapeutics
 name: Matchpoint Therapeutics
-description: 'Matchpoint Therapeutics is a company surfaced via the API Evangelist harvest backlog (source:
-  secondary-market) and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  Matchpoint Therapeutics is a privately held biotechnology company headquartered in Watertown,
+  Massachusetts — Cambridge at launch — that discovers precision small-molecule covalent medicines
+  intended to transform the treatment of immune diseases and other serious illness. It was founded
+  by covalent-chemistry, proteomics and computational-science researchers from Stanford University
+  and Harvard Medical School, closed a $30 million seed round co-led by Atlas Venture and Access
+  Biotechnology in November 2021, and launched publicly in October 2022 with $100 million in total
+  financing after a $70 million Series A led by Sanofi Ventures with Vertex Ventures HC, Digitalis
+  Ventures and Alexandria Venture Investments. Its proprietary Advanced Covalent Exploration (ACE)
+  platform combines industry-leading chemoproteomics that detects allosteric, transient and cryptic
+  binding pockets in native cells, machine-learning algorithms that prioritise targets and guide
+  medicinal chemistry, and a continuously evolving proprietary library of covalent compounds
+  spanning fragments through drug-like leads. In July 2025 Matchpoint entered an exclusive option
+  and licence agreement with Novartis to develop oral covalent inhibitors against a transcription
+  factor linked to multiple inflammatory diseases, worth up to $60 million upfront and in research
+  funding and up to $1 billion in total potential payments. Matchpoint runs no developer program and
+  publishes no product API, developer portal, API reference or SDK. The only machine-readable
+  surface reachable without credentials is the WordPress REST content API behind matchpointtx.com,
+  catalogued here.
+image: https://matchpointtx.com/wp-content/uploads/2022/09/logo-matchpoint.png
 url: https://raw.githubusercontent.com/api-evangelist/matchpoint-therapeutics/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
-specificationVersion: '0.20'
+x-tier: profiled
+x-tier-reason: enriched
+specificationVersion: '0.23'
 created: '2026-08-25'
 modified: '2026-08-25'
 tags:
 - Company
-apis: []
+- Biotechnology
+- Pharmaceuticals
+- Drug Discovery
+- Immunology
+- Covalent Chemistry
+- Chemoproteomics
+- Machine Learning
+- Life Sciences
+- content-api
+tags_raw:
+- Company
+- biotechnology
+- pharmaceuticals
+- drug-discovery
+- immunology
+- covalent-chemistry
+- chemoproteomics
+- machine-learning
+- life-sciences
+- content-api
+apis:
+- aid: matchpoint-therapeutics:matchpoint-therapeutics-team-api
+  name: Matchpoint Therapeutics Team API
+  description: >-
+    The `team` custom post type — 19 published biographies at harvest time covering the executive
+    team, board of directors, board observers and the scientific founders. The only company-specific
+    content type registered on the deployment.
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://matchpointtx.com/wp-json
+  tags:
+  - Team
+  tags_raw:
+  - team
+  properties:
+  - type: OpenAPI
+    url: openapi/matchpoint-therapeutics-team-openapi.yml
+  - type: Authentication
+    url: authentication/matchpoint-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/matchpoint-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/matchpoint-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/matchpoint-therapeutics-data-model.yml
+- aid: matchpoint-therapeutics:matchpoint-therapeutics-posts-api
+  name: Matchpoint Therapeutics Posts API
+  description: >-
+    News archive — company press releases and third-party coverage (5 published at harvest time),
+    spanning the October 2022 launch through the July 2025 Novartis agreement.
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://matchpointtx.com/wp-json
+  tags:
+  - Posts
+  tags_raw:
+  - posts
+  properties:
+  - type: OpenAPI
+    url: openapi/matchpoint-therapeutics-posts-openapi.yml
+  - type: Authentication
+    url: authentication/matchpoint-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/matchpoint-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/matchpoint-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/matchpoint-therapeutics-data-model.yml
+- aid: matchpoint-therapeutics:matchpoint-therapeutics-pages-api
+  name: Matchpoint Therapeutics Pages API
+  description: >-
+    Corporate pages (3 published at harvest time) — the single-page homepage, the privacy policy and
+    the terms of use. Science, Approach, Leadership and Careers are anchors within the homepage, not
+    separate page objects.
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://matchpointtx.com/wp-json
+  tags:
+  - Pages
+  tags_raw:
+  - pages
+  properties:
+  - type: OpenAPI
+    url: openapi/matchpoint-therapeutics-pages-openapi.yml
+  - type: Authentication
+    url: authentication/matchpoint-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/matchpoint-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/matchpoint-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/matchpoint-therapeutics-data-model.yml
+- aid: matchpoint-therapeutics:matchpoint-therapeutics-media-api
+  name: Matchpoint Therapeutics Media API
+  description: Media library — 43 image attachments at harvest time (22 PNG, 21 JPEG).
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://matchpointtx.com/wp-json
+  tags:
+  - Media
+  tags_raw:
+  - media
+  properties:
+  - type: OpenAPI
+    url: openapi/matchpoint-therapeutics-media-openapi.yml
+  - type: Authentication
+    url: authentication/matchpoint-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/matchpoint-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/matchpoint-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/matchpoint-therapeutics-data-model.yml
+- aid: matchpoint-therapeutics:matchpoint-therapeutics-search-api
+  name: Matchpoint Therapeutics Search API
+  description: >-
+    Cross-content search across published posts, pages and team members. An unfiltered query
+    returned 27 matches at harvest time.
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://matchpointtx.com/wp-json
+  tags:
+  - Search
+  tags_raw:
+  - search
+  properties:
+  - type: OpenAPI
+    url: openapi/matchpoint-therapeutics-search-openapi.yml
+  - type: Authentication
+    url: authentication/matchpoint-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/matchpoint-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/matchpoint-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/matchpoint-therapeutics-data-model.yml
+- aid: matchpoint-therapeutics:matchpoint-therapeutics-discovery-api
+  name: Matchpoint Therapeutics Discovery API
+  description: >-
+    Route, type, taxonomy and status discovery documents. The 222-route index at /wp-json/ is the
+    only machine-readable contract this provider publishes and the source every artifact here was
+    derived from.
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://matchpointtx.com/wp-json
+  tags:
+  - Discovery
+  tags_raw:
+  - discovery
+  properties:
+  - type: OpenAPI
+    url: openapi/matchpoint-therapeutics-discovery-openapi.yml
+  - type: Authentication
+    url: authentication/matchpoint-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/matchpoint-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/matchpoint-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/matchpoint-therapeutics-data-model.yml
+- aid: matchpoint-therapeutics:matchpoint-therapeutics-taxonomy-api
+  name: Matchpoint Therapeutics Taxonomy API
+  description: >-
+    Categories, post tags and the team_types taxonomy. One category term exists (uncategorized);
+    post_tag and team_types are registered but carry zero terms.
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://matchpointtx.com/wp-json
+  tags:
+  - Taxonomy
+  tags_raw:
+  - taxonomy
+  properties:
+  - type: OpenAPI
+    url: openapi/matchpoint-therapeutics-taxonomy-openapi.yml
+  - type: Authentication
+    url: authentication/matchpoint-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/matchpoint-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/matchpoint-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/matchpoint-therapeutics-data-model.yml
+- aid: matchpoint-therapeutics:matchpoint-therapeutics-oembed-api
+  name: Matchpoint Therapeutics oEmbed API
+  description: >-
+    oEmbed 1.0 provider endpoint for matchpointtx.com URLs. The sibling /oembed/1.0/proxy route
+    returned 401 and is excluded.
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://matchpointtx.com/wp-json
+  tags:
+  - oEmbed
+  tags_raw:
+  - oembed
+  properties:
+  - type: OpenAPI
+    url: openapi/matchpoint-therapeutics-oembed-openapi.yml
+  - type: Authentication
+    url: authentication/matchpoint-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/matchpoint-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/matchpoint-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/matchpoint-therapeutics-data-model.yml
+- aid: matchpoint-therapeutics:matchpoint-therapeutics-comments-api
+  name: Matchpoint Therapeutics Comments API
+  description: >-
+    Comment collection. Registered and anonymously reachable, but empty — no object on this
+    deployment carries comments.
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://matchpointtx.com/wp-json
+  tags:
+  - Comments
+  tags_raw:
+  - comments
+  properties:
+  - type: OpenAPI
+    url: openapi/matchpoint-therapeutics-comments-openapi.yml
+  - type: Authentication
+    url: authentication/matchpoint-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/matchpoint-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/matchpoint-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/matchpoint-therapeutics-data-model.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -20,4 +257,51 @@ maintainers:
   email: info@apis.io
 common:
 - type: Website
-  url: https://www.nasdaqprivatemarket.com/
+  url: https://matchpointtx.com/
+- type: BlogRSS
+  url: https://matchpointtx.com/feed/
+- type: Careers
+  url: https://boards.greenhouse.io/matchpointtx
+- type: PrivacyPolicy
+  url: https://matchpointtx.com/privacy-policy/
+- type: TermsOfService
+  url: https://matchpointtx.com/terms-conditions/
+- type: LinkedIn
+  url: https://www.linkedin.com/company/matchpoint-therapeutics
+- type: Twitter
+  url: https://twitter.com/matchpointtx
+- type: SecondaryMarket
+  url: https://www.nasdaqprivatemarket.com/company/matchpoint-therapeutics/
+- type: SecondaryMarket
+  url: https://equityzen.com/company/matchpointtherapeutics/
+- type: Authentication
+  url: authentication/matchpoint-therapeutics-authentication.yml
+- type: Conventions
+  url: conventions/matchpoint-therapeutics-conventions.yml
+- type: Conformance
+  url: conformance/matchpoint-therapeutics-conformance.yml
+- type: ErrorCatalog
+  url: errors/matchpoint-therapeutics-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/matchpoint-therapeutics-lifecycle.yml
+- type: DataModel
+  url: data-model/matchpoint-therapeutics-data-model.yml
+- type: Overlay
+  url: overlays/matchpoint-therapeutics-content-overlay.yaml
+- type: DomainSecurity
+  url: security/matchpoint-therapeutics-domain-security.yml
+- type: Packages
+  url: packages/matchpoint-therapeutics-packages.yml
+- type: Plans
+  url: plans/matchpoint-therapeutics-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/matchpoint-therapeutics-rate-limits.yml
+- type: LLMsTxt
+  url: llms/matchpoint-therapeutics-llms.txt
+- type: AgentSkill
+  url: skills/_index.yml
+x-enrichment:
+  date: '2026-08-25'
+  status: enriched
+  artifacts_added: 27
+  pass: local-v1

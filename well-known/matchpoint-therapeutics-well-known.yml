@@ -1,0 +1,79 @@
+generated: '2026-08-25'
+method: probed
+source: live GET probes of the /.well-known/ discovery surface on matchpointtx.com
+hit_count: 0
+note: >-
+  Matchpoint Therapeutics publishes no /.well-known/ discovery documents. Every RFC 8615 path
+  probed on 2026-08-25 returned 404. The site is WordPress on WP Engine behind Cloudflare;
+  /.well-known/ paths that fall through the WordPress rewrite return the 23KB theme 404 body, while
+  security.txt and llms.txt return the bare 146-byte nginx 404 page — the two distinct body sizes
+  are the soft-404 control, and both are genuine misses rather than an SPA catch-all answering 200.
+  Absence is recorded here as valid data. Because nothing returned a 200 carrying a real document,
+  NO `WellKnown` and NO `SecurityTxt` pointer is emitted in apis.yml. No agent card was found at
+  either the A2A 1.0.0 canonical path or the pre-0.3 legacy path, so no a2a/ artifact is written.
+hosts:
+- host: https://matchpointtx.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+soft_404_control:
+  wordpress_rewrite_404_bytes: 23911
+  nginx_404_bytes: 146
+  detail: >-
+    /.well-known/security.txt and /llms.txt return the 146-byte nginx body; the JSON /.well-known/
+    paths return the ~23KB WordPress theme 404. Neither is a 200, so no promotion to `document` is
+    possible.
+related:
+- path: /llms.txt
+  status: 404
+- path: /robots.txt
+  status: 200
+  note: >-
+    Yoast-generated block. `User-agent: * / Disallow:` — everything allowed, no Crawl-delay, no
+    AI-agent directives, one sitemap reference.
+- path: /sitemap_index.xml
+  status: 200
+  note: Yoast XML sitemap index — page, post, category and author sitemaps.
+- path: /feed/
+  status: 200
+  note: WordPress RSS 2.0 feed for the 5-item news archive. Wired in apis.yml as type BlogRSS.
+- path: /wp-json/
+  status: 200
+  note: >-
+    The WordPress REST route index — 222 routes across 13 namespaces, and the only machine-readable
+    contract this provider exposes. Modelled in openapi/.
+- path: /openapi.json
+  status: 404
+- path: /swagger.json
+  status: 404
+- path: /api-docs
+  status: 404
+- path: /graphql
+  status: 404
+- path: /api
+  status: 404
+- path: /developers
+  status: 404
+x-evidence:
+  probed: '2026-08-25'
+  user_agent: curl
+  host: matchpointtx.com

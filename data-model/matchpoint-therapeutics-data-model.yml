@@ -1,0 +1,148 @@
+generated: '2026-08-25'
+method: derived
+source: openapi/*.yml in this repo (WordPress REST route index + live anonymous responses, 2026-08-25)
+note: >-
+  Entity-relationship graph of the anonymously readable Matchpoint Therapeutics content API,
+  derived from the $ref graph and the id-reference fields in the specs in openapi/. Matchpoint
+  publishes no object reference; identifiers are bare integers with no prefixes or domains, so
+  nothing here comes from documentation.
+identifier_scheme:
+  style: integer
+  prefixes: []
+  detail: >-
+    Every object is keyed by a bare auto-increment integer, unique per WordPress object table, not
+    per collection — posts, pages, media and team members share one id space, which is why post 1,
+    page 9, page 10, page 18, team 258 and media ids all coexist without collision. IDs are sparse:
+    media id 1 does not exist.
+entities:
+- name: Post
+  collection: /wp/v2/posts
+  count_at_harvest: 5
+  description: A news item — company press release or third-party coverage.
+  relationships:
+  - type: has_many
+    target: Term
+    via: categories
+    detail: Category term ids. All 5 posts carry term 1 (uncategorized).
+  - type: has_many
+    target: Term
+    via: tags
+    detail: post_tag term ids. Empty on this deployment.
+  - type: has_one
+    target: MediaItem
+    via: featured_media
+  - type: belongs_to
+    target: User
+    via: author
+    detail: The /wp/v2/users collection is 401-gated, so the author id cannot be resolved anonymously.
+  - type: has_many
+    target: Comment
+    via: _links.replies
+    detail: Zero comments exist.
+- name: Page
+  collection: /wp/v2/pages
+  count_at_harvest: 3
+  description: A corporate page — homepage (10), privacy policy (9), terms of use (18).
+  relationships:
+  - type: belongs_to
+    target: Page
+    via: parent
+    detail: Self-referential hierarchy. All three pages are top-level (parent 0).
+  - type: has_one
+    target: MediaItem
+    via: featured_media
+  - type: belongs_to
+    target: User
+    via: author
+- name: TeamMember
+  collection: /wp/v2/team
+  count_at_harvest: 19
+  description: >-
+    The `team` custom post type — the company's executive team, board of directors, board observers
+    and scientific founders. The richest company-specific structure on the deployment.
+  relationships:
+  - type: has_many
+    target: Term
+    via: team_types
+    detail: >-
+      Terms from the team_types taxonomy. The taxonomy is registered and hierarchical but carries
+      ZERO terms, so the executive / board / observer / founder grouping a reader sees rendered on
+      the homepage exists only in the theme's presentation layer and is NOT retrievable through the
+      API. This is the single most consequential modelling gap on the deployment: an agent can list
+      all 19 people but cannot tell a director from a founder without parsing the biography text.
+  - type: has_one
+    target: MediaItem
+    via: featured_media
+    detail: The headshot.
+- name: MediaItem
+  collection: /wp/v2/media
+  count_at_harvest: 43
+  description: A media-library attachment — 22 image/png, 21 image/jpeg. No documents or video.
+  relationships:
+  - type: belongs_to
+    target: Post
+    via: post
+    detail: The object the attachment was uploaded to, when any.
+  - type: belongs_to
+    target: User
+    via: author
+- name: Term
+  collections:
+  - /wp/v2/categories
+  - /wp/v2/tags
+  - /wp/v2/team_types
+  count_at_harvest: 1
+  description: A taxonomy term. Only category 1 (uncategorized) exists; post_tag and team_types are empty.
+  relationships:
+  - type: belongs_to
+    target: Term
+    via: parent
+    detail: Self-referential, on the hierarchical taxonomies (category, team_types).
+  - type: has_many
+    target: Post
+    via: count
+    detail: The `count` field carries the number of objects assigned to the term (5 for term 1).
+- name: Comment
+  collection: /wp/v2/comments
+  count_at_harvest: 0
+  description: Registered and reachable, but empty.
+  relationships:
+  - type: belongs_to
+    target: Post
+    via: post
+  - type: belongs_to
+    target: Comment
+    via: parent
+- name: SearchResult
+  collection: /wp/v2/search
+  count_at_harvest: 27
+  description: >-
+    A projection, not an entity — a lightweight pointer (id, title, url, type, subtype) that
+    resolves back to a Post, Page or TeamMember. The 27 hits are the union of 5 posts, 3 pages and
+    19 team members.
+  relationships:
+  - type: has_one
+    target: Post|Page|TeamMember
+    via: id + subtype
+- name: User
+  collection: /wp/v2/users
+  count_at_harvest: null
+  description: >-
+    Gated at 401 rest_user_cannot_view. Present in the graph only as the unresolvable target of
+    every `author` reference. The 19 people Matchpoint actually publishes are TeamMember objects,
+    not Users.
+- name: RouteIndex
+  collection: /
+  description: >-
+    The 222-route, 13-namespace discovery document. Not a content entity — it is the contract, and
+    the source of every spec in openapi/.
+render: null
+gaps:
+- >-
+  team_types is registered but empty, so role grouping is not machine-readable (see TeamMember).
+- >-
+  `author` is a dangling reference on every post-like object because /wp/v2/users is 401-gated.
+- >-
+  No custom meta keys are exposed, so pipeline, target, programme and partnership facts — the
+  company's actual subject matter — exist only inside rendered HTML in `content.rendered`, not as
+  structured fields.
