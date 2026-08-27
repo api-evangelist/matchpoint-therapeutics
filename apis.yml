@@ -51,21 +51,89 @@ tags_raw:
 - life-sciences
 - content-api
 apis:
-- aid: matchpoint-therapeutics:matchpoint-therapeutics-team-api
-  name: Matchpoint Therapeutics Team API
+- aid: matchpoint-therapeutics:matchpoint-therapeutics-comments-api
+  name: Matchpoint Therapeutics Comments API
   description: >-
-    The `team` custom post type — 19 published biographies at harvest time covering the executive
-    team, board of directors, board observers and the scientific founders. The only company-specific
-    content type registered on the deployment.
+    Comment collection. Registered and reachable, but empty — no object on this deployment carries comments.
   humanURL: https://developer.wordpress.org/rest-api/
   baseURL: https://matchpointtx.com/wp-json
   tags:
-  - Team
-  tags_raw:
-  - team
+  - comments
   properties:
   - type: OpenAPI
-    url: openapi/matchpoint-therapeutics-team-openapi.yml
+    url: openapi/matchpoint-therapeutics-comments-api-openapi.yml
+  - type: Authentication
+    url: authentication/matchpoint-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/matchpoint-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/matchpoint-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/matchpoint-therapeutics-data-model.yml
+- aid: matchpoint-therapeutics:matchpoint-therapeutics-discovery-api
+  name: Matchpoint Therapeutics Discovery API
+  description: Route, type, taxonomy and status discovery documents.
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://matchpointtx.com/wp-json
+  tags:
+  - discovery
+  properties:
+  - type: OpenAPI
+    url: openapi/matchpoint-therapeutics-discovery-api-openapi.yml
+  - type: Authentication
+    url: authentication/matchpoint-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/matchpoint-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/matchpoint-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/matchpoint-therapeutics-data-model.yml
+- aid: matchpoint-therapeutics:matchpoint-therapeutics-media-api
+  name: Matchpoint Therapeutics Media API
+  description: Media library — 43 image attachments at harvest time.
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://matchpointtx.com/wp-json
+  tags:
+  - media
+  properties:
+  - type: OpenAPI
+    url: openapi/matchpoint-therapeutics-media-api-openapi.yml
+  - type: Authentication
+    url: authentication/matchpoint-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/matchpoint-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/matchpoint-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/matchpoint-therapeutics-data-model.yml
+- aid: matchpoint-therapeutics:matchpoint-therapeutics-oembed-api
+  name: Matchpoint Therapeutics Oembed API
+  description: oEmbed 1.0 provider endpoint for matchpointtx.com URLs.
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://matchpointtx.com/wp-json
+  tags:
+  - oembed
+  properties:
+  - type: OpenAPI
+    url: openapi/matchpoint-therapeutics-oembed-api-openapi.yml
+  - type: Authentication
+    url: authentication/matchpoint-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/matchpoint-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/matchpoint-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/matchpoint-therapeutics-data-model.yml
+- aid: matchpoint-therapeutics:matchpoint-therapeutics-pages-api
+  name: Matchpoint Therapeutics Pages API
+  description: Corporate pages — homepage, privacy policy, terms of use (3 published at harvest time).
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://matchpointtx.com/wp-json
+  tags:
+  - pages
+  properties:
+  - type: OpenAPI
+    url: openapi/matchpoint-therapeutics-pages-api-openapi.yml
   - type: Authentication
     url: authentication/matchpoint-therapeutics-authentication.yml
   - type: ErrorCatalog
@@ -77,60 +145,14 @@ apis:
 - aid: matchpoint-therapeutics:matchpoint-therapeutics-posts-api
   name: Matchpoint Therapeutics Posts API
   description: >-
-    News archive — company press releases and third-party coverage (5 published at harvest time),
-    spanning the October 2022 launch through the July 2025 Novartis agreement.
+    News archive — company press releases and third-party coverage (5 published at harvest time).
   humanURL: https://developer.wordpress.org/rest-api/
   baseURL: https://matchpointtx.com/wp-json
   tags:
-  - Posts
-  tags_raw:
   - posts
   properties:
   - type: OpenAPI
-    url: openapi/matchpoint-therapeutics-posts-openapi.yml
-  - type: Authentication
-    url: authentication/matchpoint-therapeutics-authentication.yml
-  - type: ErrorCatalog
-    url: errors/matchpoint-therapeutics-problem-types.yml
-  - type: Conventions
-    url: conventions/matchpoint-therapeutics-conventions.yml
-  - type: DataModel
-    url: data-model/matchpoint-therapeutics-data-model.yml
-- aid: matchpoint-therapeutics:matchpoint-therapeutics-pages-api
-  name: Matchpoint Therapeutics Pages API
-  description: >-
-    Corporate pages (3 published at harvest time) — the single-page homepage, the privacy policy and
-    the terms of use. Science, Approach, Leadership and Careers are anchors within the homepage, not
-    separate page objects.
-  humanURL: https://developer.wordpress.org/rest-api/
-  baseURL: https://matchpointtx.com/wp-json
-  tags:
-  - Pages
-  tags_raw:
-  - pages
-  properties:
-  - type: OpenAPI
-    url: openapi/matchpoint-therapeutics-pages-openapi.yml
-  - type: Authentication
-    url: authentication/matchpoint-therapeutics-authentication.yml
-  - type: ErrorCatalog
-    url: errors/matchpoint-therapeutics-problem-types.yml
-  - type: Conventions
-    url: conventions/matchpoint-therapeutics-conventions.yml
-  - type: DataModel
-    url: data-model/matchpoint-therapeutics-data-model.yml
-- aid: matchpoint-therapeutics:matchpoint-therapeutics-media-api
-  name: Matchpoint Therapeutics Media API
-  description: Media library — 43 image attachments at harvest time (22 PNG, 21 JPEG).
-  humanURL: https://developer.wordpress.org/rest-api/
-  baseURL: https://matchpointtx.com/wp-json
-  tags:
-  - Media
-  tags_raw:
-  - media
-  properties:
-  - type: OpenAPI
-    url: openapi/matchpoint-therapeutics-media-openapi.yml
+    url: openapi/matchpoint-therapeutics-posts-api-openapi.yml
   - type: Authentication
     url: authentication/matchpoint-therapeutics-authentication.yml
   - type: ErrorCatalog
@@ -141,41 +163,14 @@ apis:
     url: data-model/matchpoint-therapeutics-data-model.yml
 - aid: matchpoint-therapeutics:matchpoint-therapeutics-search-api
   name: Matchpoint Therapeutics Search API
-  description: >-
-    Cross-content search across published posts, pages and team members. An unfiltered query
-    returned 27 matches at harvest time.
+  description: Cross-content search across published objects.
   humanURL: https://developer.wordpress.org/rest-api/
   baseURL: https://matchpointtx.com/wp-json
   tags:
-  - Search
-  tags_raw:
   - search
   properties:
   - type: OpenAPI
-    url: openapi/matchpoint-therapeutics-search-openapi.yml
-  - type: Authentication
-    url: authentication/matchpoint-therapeutics-authentication.yml
-  - type: ErrorCatalog
-    url: errors/matchpoint-therapeutics-problem-types.yml
-  - type: Conventions
-    url: conventions/matchpoint-therapeutics-conventions.yml
-  - type: DataModel
-    url: data-model/matchpoint-therapeutics-data-model.yml
-- aid: matchpoint-therapeutics:matchpoint-therapeutics-discovery-api
-  name: Matchpoint Therapeutics Discovery API
-  description: >-
-    Route, type, taxonomy and status discovery documents. The 222-route index at /wp-json/ is the
-    only machine-readable contract this provider publishes and the source every artifact here was
-    derived from.
-  humanURL: https://developer.wordpress.org/rest-api/
-  baseURL: https://matchpointtx.com/wp-json
-  tags:
-  - Discovery
-  tags_raw:
-  - discovery
-  properties:
-  - type: OpenAPI
-    url: openapi/matchpoint-therapeutics-discovery-openapi.yml
+    url: openapi/matchpoint-therapeutics-search-api-openapi.yml
   - type: Authentication
     url: authentication/matchpoint-therapeutics-authentication.yml
   - type: ErrorCatalog
@@ -187,17 +182,15 @@ apis:
 - aid: matchpoint-therapeutics:matchpoint-therapeutics-taxonomy-api
   name: Matchpoint Therapeutics Taxonomy API
   description: >-
-    Categories, post tags and the team_types taxonomy. One category term exists (uncategorized);
-    post_tag and team_types are registered but carry zero terms.
+    Categories, post tags and the team_types taxonomy. Only one category term exists; post_tag and team_types
+    are registered but empty.
   humanURL: https://developer.wordpress.org/rest-api/
   baseURL: https://matchpointtx.com/wp-json
   tags:
-  - Taxonomy
-  tags_raw:
   - taxonomy
   properties:
   - type: OpenAPI
-    url: openapi/matchpoint-therapeutics-taxonomy-openapi.yml
+    url: openapi/matchpoint-therapeutics-taxonomy-api-openapi.yml
   - type: Authentication
     url: authentication/matchpoint-therapeutics-authentication.yml
   - type: ErrorCatalog
@@ -206,42 +199,18 @@ apis:
     url: conventions/matchpoint-therapeutics-conventions.yml
   - type: DataModel
     url: data-model/matchpoint-therapeutics-data-model.yml
-- aid: matchpoint-therapeutics:matchpoint-therapeutics-oembed-api
-  name: Matchpoint Therapeutics oEmbed API
+- aid: matchpoint-therapeutics:matchpoint-therapeutics-team-api
+  name: Matchpoint Therapeutics Team API
   description: >-
-    oEmbed 1.0 provider endpoint for matchpointtx.com URLs. The sibling /oembed/1.0/proxy route
-    returned 401 and is excluded.
+    Leadership, board, observers and scientific founders as a custom post type (19 published at harvest
+    time).
   humanURL: https://developer.wordpress.org/rest-api/
   baseURL: https://matchpointtx.com/wp-json
   tags:
-  - oEmbed
-  tags_raw:
-  - oembed
+  - team
   properties:
   - type: OpenAPI
-    url: openapi/matchpoint-therapeutics-oembed-openapi.yml
-  - type: Authentication
-    url: authentication/matchpoint-therapeutics-authentication.yml
-  - type: ErrorCatalog
-    url: errors/matchpoint-therapeutics-problem-types.yml
-  - type: Conventions
-    url: conventions/matchpoint-therapeutics-conventions.yml
-  - type: DataModel
-    url: data-model/matchpoint-therapeutics-data-model.yml
-- aid: matchpoint-therapeutics:matchpoint-therapeutics-comments-api
-  name: Matchpoint Therapeutics Comments API
-  description: >-
-    Comment collection. Registered and anonymously reachable, but empty — no object on this
-    deployment carries comments.
-  humanURL: https://developer.wordpress.org/rest-api/
-  baseURL: https://matchpointtx.com/wp-json
-  tags:
-  - Comments
-  tags_raw:
-  - comments
-  properties:
-  - type: OpenAPI
-    url: openapi/matchpoint-therapeutics-comments-openapi.yml
+    url: openapi/matchpoint-therapeutics-team-api-openapi.yml
   - type: Authentication
     url: authentication/matchpoint-therapeutics-authentication.yml
   - type: ErrorCatalog
