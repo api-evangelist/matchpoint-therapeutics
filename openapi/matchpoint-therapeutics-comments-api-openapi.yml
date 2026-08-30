@@ -1,0 +1,327 @@
+openapi: 3.2.0
+info:
+  title: Matchpoint Therapeutics Content Comments API
+  version: wp/v2
+  summary: Anonymously readable WordPress REST content API behind matchpointtx.com.
+  description: The read-only content surface Matchpoint Therapeutics exposes at https://matchpointtx.com/wp-json. Matchpoint Therapeutics is a Cambridge, Massachusetts biotechnology company founded in 2021 and launched publicly in October 2022 with $100 million in financing, discovering precision small-molecule covalent medicines for immune diseases and cancer on its Advanced Covalent Exploration (ACE) platform. It runs no developer program and markets no product API. This document is an API Evangelist derivation of the WordPress `wp/v2` and `oembed/1.0` route index the site publishes at /wp-json/, restricted to the operations that were verified to return data anonymously on 2026-08-25.
+  contact:
+    name: Matchpoint Therapeutics
+    url: https://matchpointtx.com/
+  x-api-evangelist-provenance: 'Derived by the API Evangelist enrichment pipeline from the live WordPress REST route index at https://matchpointtx.com/wp-json/ (222 routes across 13 namespaces) and verified against live anonymous responses on 2026-08-25. Every parameter below appears verbatim in the route index `args` for that endpoint, and every collection count in a description was read from the `X-WP-Total` response header on that date. Matchpoint Therapeutics publishes no OpenAPI, no developer documentation and no API reference for this surface; the humanURL in apis.yml points at the upstream WordPress REST handbook that defines the wp/v2 contract. The deployment is served by WP Engine behind Cloudflare (x-powered-by: WP Engine, cf-ray on every response) and API responses carry `x-robots-tag: noindex`. Write operations and the credentialed surface — POST/PUT/PATCH/DELETE everywhere, /wp/v2/users, /wp/v2/settings, /wp/v2/menus, /wp/v2/menu-items, /wp/v2/templates, /wp/v2/template-parts, the yoast/v1, struck/v1, wordfence/v1, wpe/cache-plugin/v1, wpe_sign_on_plugin/v1, wp-site-health/v1, wp-block-editor/v1 and wp-abilities/v1 namespaces, and /oembed/1.0/proxy (observed 401) — are deliberately excluded. Nothing here was obtained with credentials.'
+servers:
+- url: https://matchpointtx.com/wp-json
+  description: Production content API
+tags:
+- name: comments
+  description: Comment collection. Registered and reachable, but empty — no object on this deployment carries comments.
+paths:
+  /wp/v2/comments:
+    get:
+      tags:
+      - comments
+      operationId: listComments
+      summary: List comments
+      description: Lists approved comments. Registered and anonymously reachable, but empty — no object on this deployment carries comments (X-WP-Total 0 at harvest time).
+      parameters:
+      - $ref: '#/components/parameters/Context'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      - $ref: '#/components/parameters/Search'
+      - $ref: '#/components/parameters/After'
+      - $ref: '#/components/parameters/Before'
+      - $ref: '#/components/parameters/Exclude'
+      - $ref: '#/components/parameters/Include'
+      - $ref: '#/components/parameters/Offset'
+      - $ref: '#/components/parameters/Order'
+      - $ref: '#/components/parameters/Fields'
+      - name: orderby
+        in: query
+        description: Sort collection by comment attribute.
+        schema:
+          type: string
+          enum:
+          - date
+          - date_gmt
+          - id
+          - include
+          - post
+          - parent
+          - type
+          default: date_gmt
+      - name: author_email
+        in: query
+        description: Limit result set to comments assigned to a specific author email. Requires authentication.
+        schema:
+          type: string
+          format: email
+      - name: parent
+        in: query
+        description: Limit result set to comments of specific parent IDs.
+        schema:
+          type: array
+          items:
+            type: integer
+      - name: post
+        in: query
+        description: Limit result set to comments assigned to specific post IDs.
+        schema:
+          type: array
+          items:
+            type: integer
+      - name: status
+        in: query
+        description: Limit result set to comments assigned a specific status. Anonymously only `approve` is permitted.
+        schema:
+          type: string
+          default: approve
+      - name: type
+        in: query
+        description: Limit result set to comments assigned a specific type.
+        schema:
+          type: string
+          default: comment
+      responses:
+        '200':
+          description: A page of results
+          headers:
+            X-WP-Total:
+              schema:
+                type: integer
+                examples:
+                - 0
+              description: Total number of matching items.
+            X-WP-TotalPages:
+              schema:
+                type: integer
+              description: Total number of pages available.
+            Link:
+              schema:
+                type: string
+              description: RFC 8288 pagination links (rel="next" / rel="prev").
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comment'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /wp/v2/comments/{id}:
+    get:
+      tags:
+      - comments
+      operationId: getComment
+      summary: Retrieve a comment
+      description: Retrieves a single approved comment. No comment exists on this deployment.
+      parameters:
+      - $ref: '#/components/parameters/Id'
+      - $ref: '#/components/parameters/Context'
+      - $ref: '#/components/parameters/Fields'
+      - name: password
+        in: query
+        description: The password for the parent post of the comment, if the post is password protected.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The comment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  responses:
+    NotFound:
+      description: No object matches the requested identifier (rest_post_invalid_id / rest_term_invalid)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: The requested scope or route requires an authenticated user (rest_forbidden)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Invalid parameter (rest_invalid_param / rest_missing_callback_param)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  parameters:
+    Before:
+      name: before
+      in: query
+      description: Limit response to posts published before a given ISO8601 compliant date.
+      schema:
+        type: string
+        format: date-time
+    Fields:
+      name: _fields
+      in: query
+      description: Comma-separated allow-list of top-level response fields (WordPress REST global parameter).
+      schema:
+        type: string
+    After:
+      name: after
+      in: query
+      description: Limit response to posts published after a given ISO8601 compliant date.
+      schema:
+        type: string
+        format: date-time
+    Offset:
+      name: offset
+      in: query
+      description: Offset the result set by a specific number of items.
+      schema:
+        type: integer
+    PerPage:
+      name: per_page
+      in: query
+      description: Maximum number of items to be returned in the result set.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+    Page:
+      name: page
+      in: query
+      description: Current page of the collection.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    Search:
+      name: search
+      in: query
+      description: Limit results to those matching a string.
+      schema:
+        type: string
+    Order:
+      name: order
+      in: query
+      description: Order sort attribute ascending or descending.
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+        default: desc
+    Exclude:
+      name: exclude
+      in: query
+      description: Ensure result set excludes specific IDs.
+      schema:
+        type: array
+        items:
+          type: integer
+    Id:
+      name: id
+      in: path
+      required: true
+      description: Unique identifier for the object.
+      schema:
+        type: integer
+    Include:
+      name: include
+      in: query
+      description: Limit result set to specific IDs.
+      schema:
+        type: array
+        items:
+          type: integer
+    Context:
+      name: context
+      in: query
+      description: Scope under which the request is made; determines fields present in the response. Anonymously only `view` and `embed` return data; `edit` returns 401.
+      schema:
+        type: string
+        enum:
+        - view
+        - embed
+        - edit
+        default: view
+  schemas:
+    Error:
+      type: object
+      description: The WordPress REST error envelope. Not RFC 9457 problem+json.
+      required:
+      - code
+      - message
+      - data
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code.
+          examples:
+          - rest_post_invalid_id
+        message:
+          type: string
+          description: Human-readable error message.
+          examples:
+          - Invalid post ID.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: The HTTP status code.
+              examples:
+              - 404
+            params:
+              type: object
+              description: Per-parameter messages, present on rest_invalid_param.
+              additionalProperties:
+                type: string
+            details:
+              type: object
+              description: Per-parameter structured detail, present on rest_invalid_param.
+              additionalProperties:
+                type: object
+    Comment:
+      type: object
+      description: A comment. The collection is registered and reachable but empty on this deployment.
+      properties:
+        id:
+          type: integer
+        post:
+          type: integer
+        parent:
+          type: integer
+        author:
+          type: integer
+        author_name:
+          type: string
+        author_url:
+          type: string
+          format: uri
+        date:
+          type: string
+          format: date-time
+        date_gmt:
+          type: string
+          format: date-time
+        content:
+          type: object
+          properties:
+            rendered:
+              type: string
+        link:
+          type: string
+          format: uri
+        status:
+          type: string
+        type:
+          type: string
+        author_avatar_urls:
+          type: object
+        meta:
+          type: object
+        _links:
+          type: object
