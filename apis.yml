@@ -138,26 +138,6 @@ apis:
     url: conventions/matchpoint-therapeutics-conventions.yml
   - type: DataModel
     url: data-model/matchpoint-therapeutics-data-model.yml
-- aid: matchpoint-therapeutics:matchpoint-therapeutics-oembed-api
-  name: Matchpoint Therapeutics Oembed API
-  description: oEmbed 1.0 provider endpoint for matchpointtx.com URLs.
-  humanURL: https://developer.wordpress.org/rest-api/
-  baseURL: https://matchpointtx.com/wp-json
-  tags:
-  - oEmbed
-  tags_raw:
-  - oembed
-  properties:
-  - type: OpenAPI
-    url: openapi/matchpoint-therapeutics-oembed-api-openapi.yml
-  - type: Authentication
-    url: authentication/matchpoint-therapeutics-authentication.yml
-  - type: ErrorCatalog
-    url: errors/matchpoint-therapeutics-problem-types.yml
-  - type: Conventions
-    url: conventions/matchpoint-therapeutics-conventions.yml
-  - type: DataModel
-    url: data-model/matchpoint-therapeutics-data-model.yml
 - aid: matchpoint-therapeutics:matchpoint-therapeutics-pages-api
   name: Matchpoint Therapeutics Pages API
   description: Corporate pages — homepage, privacy policy, terms of use (3 published at harvest time).
@@ -255,6 +235,24 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/matchpoint-therapeutics-team-api-openapi.yml
+  - type: Authentication
+    url: authentication/matchpoint-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/matchpoint-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/matchpoint-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/matchpoint-therapeutics-data-model.yml
+- aid: matchpoint-therapeutics:matchpoint-therapeutics-o-embed-api
+  name: Matchpoint Therapeutics o Embed API
+  description: oEmbed 1.0 provider endpoint for matchpointtx.com URLs.
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://matchpointtx.com/wp-json
+  tags:
+  - o Embed
+  properties:
+  - type: OpenAPI
+    url: openapi/matchpoint-therapeutics-o-embed-api-openapi.yml
   - type: Authentication
     url: authentication/matchpoint-therapeutics-authentication.yml
   - type: ErrorCatalog
