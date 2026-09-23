@@ -3,7 +3,7 @@ info:
   title: Matchpoint Therapeutics Content Comments API
   version: wp/v2
   summary: Anonymously readable WordPress REST content API behind matchpointtx.com.
-  description: The read-only content surface Matchpoint Therapeutics exposes at https://matchpointtx.com/wp-json. Matchpoint Therapeutics is a Cambridge, Massachusetts biotechnology company founded in 2021 and launched publicly in October 2022 with $100 million in financing, discovering precision small-molecule covalent medicines for immune diseases and cancer on its Advanced Covalent Exploration (ACE) platform. It runs no developer program and markets no product API. This document is an API Evangelist derivation of the WordPress `wp/v2` and `oembed/1.0` route index the site publishes at /wp-json/, restricted to the operations that were verified to return data anonymously on 2026-08-25.
+  description: The read-only content surface Matchpoint Therapeutics exposes at https://matchpointtx.com/wp-json.
   contact:
     name: Matchpoint Therapeutics
     url: https://matchpointtx.com/
@@ -12,13 +12,13 @@ servers:
 - url: https://matchpointtx.com/wp-json
   description: Production content API
 tags:
-- name: comments
+- name: Comments
   description: Comment collection. Registered and reachable, but empty — no object on this deployment carries comments.
 paths:
   /wp/v2/comments:
     get:
       tags:
-      - comments
+      - Comments
       operationId: listComments
       summary: List comments
       description: Lists approved comments. Registered and anonymously reachable, but empty — no object on this deployment carries comments (X-WP-Total 0 at harvest time).
@@ -111,7 +111,7 @@ paths:
   /wp/v2/comments/{id}:
     get:
       tags:
-      - comments
+      - Comments
       operationId: getComment
       summary: Retrieve a comment
       description: Retrieves a single approved comment. No comment exists on this deployment.
@@ -134,26 +134,21 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  responses:
-    NotFound:
-      description: No object matches the requested identifier (rest_post_invalid_id / rest_term_invalid)
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: The requested scope or route requires an authenticated user (rest_forbidden)
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Invalid parameter (rest_invalid_param / rest_missing_callback_param)
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   parameters:
+    Search:
+      name: search
+      in: query
+      description: Limit results to those matching a string.
+      schema:
+        type: string
+    Include:
+      name: include
+      in: query
+      description: Limit result set to specific IDs.
+      schema:
+        type: array
+        items:
+          type: integer
     Before:
       name: before
       in: query
@@ -167,28 +162,12 @@ components:
       description: Comma-separated allow-list of top-level response fields (WordPress REST global parameter).
       schema:
         type: string
-    After:
-      name: after
-      in: query
-      description: Limit response to posts published after a given ISO8601 compliant date.
-      schema:
-        type: string
-        format: date-time
     Offset:
       name: offset
       in: query
       description: Offset the result set by a specific number of items.
       schema:
         type: integer
-    PerPage:
-      name: per_page
-      in: query
-      description: Maximum number of items to be returned in the result set.
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-        default: 10
     Page:
       name: page
       in: query
@@ -197,41 +176,10 @@ components:
         type: integer
         minimum: 1
         default: 1
-    Search:
-      name: search
-      in: query
-      description: Limit results to those matching a string.
-      schema:
-        type: string
-    Order:
-      name: order
-      in: query
-      description: Order sort attribute ascending or descending.
-      schema:
-        type: string
-        enum:
-        - asc
-        - desc
-        default: desc
     Exclude:
       name: exclude
       in: query
       description: Ensure result set excludes specific IDs.
-      schema:
-        type: array
-        items:
-          type: integer
-    Id:
-      name: id
-      in: path
-      required: true
-      description: Unique identifier for the object.
-      schema:
-        type: integer
-    Include:
-      name: include
-      in: query
-      description: Limit result set to specific IDs.
       schema:
         type: array
         items:
@@ -247,43 +195,40 @@ components:
         - embed
         - edit
         default: view
+    Id:
+      name: id
+      in: path
+      required: true
+      description: Unique identifier for the object.
+      schema:
+        type: integer
+    Order:
+      name: order
+      in: query
+      description: Order sort attribute ascending or descending.
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+        default: desc
+    After:
+      name: after
+      in: query
+      description: Limit response to posts published after a given ISO8601 compliant date.
+      schema:
+        type: string
+        format: date-time
+    PerPage:
+      name: per_page
+      in: query
+      description: Maximum number of items to be returned in the result set.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
   schemas:
-    Error:
-      type: object
-      description: The WordPress REST error envelope. Not RFC 9457 problem+json.
-      required:
-      - code
-      - message
-      - data
-      properties:
-        code:
-          type: string
-          description: Machine-readable error code.
-          examples:
-          - rest_post_invalid_id
-        message:
-          type: string
-          description: Human-readable error message.
-          examples:
-          - Invalid post ID.
-        data:
-          type: object
-          properties:
-            status:
-              type: integer
-              description: The HTTP status code.
-              examples:
-              - 404
-            params:
-              type: object
-              description: Per-parameter messages, present on rest_invalid_param.
-              additionalProperties:
-                type: string
-            details:
-              type: object
-              description: Per-parameter structured detail, present on rest_invalid_param.
-              additionalProperties:
-                type: object
     Comment:
       type: object
       description: A comment. The collection is registered and reachable but empty on this deployment.
@@ -325,3 +270,58 @@ components:
           type: object
         _links:
           type: object
+    Error:
+      type: object
+      description: The WordPress REST error envelope. Not RFC 9457 problem+json.
+      required:
+      - code
+      - message
+      - data
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code.
+          examples:
+          - rest_post_invalid_id
+        message:
+          type: string
+          description: Human-readable error message.
+          examples:
+          - Invalid post ID.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: The HTTP status code.
+              examples:
+              - 404
+            params:
+              type: object
+              description: Per-parameter messages, present on rest_invalid_param.
+              additionalProperties:
+                type: string
+            details:
+              type: object
+              description: Per-parameter structured detail, present on rest_invalid_param.
+              additionalProperties:
+                type: object
+  responses:
+    NotFound:
+      description: No object matches the requested identifier (rest_post_invalid_id / rest_term_invalid)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Invalid parameter (rest_invalid_param / rest_missing_callback_param)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: The requested scope or route requires an authenticated user (rest_forbidden)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

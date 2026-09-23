@@ -3,7 +3,7 @@ info:
   title: Matchpoint Therapeutics Content Search API
   version: wp/v2
   summary: Anonymously readable WordPress REST content API behind matchpointtx.com.
-  description: The read-only content surface Matchpoint Therapeutics exposes at https://matchpointtx.com/wp-json. Matchpoint Therapeutics is a Cambridge, Massachusetts biotechnology company founded in 2021 and launched publicly in October 2022 with $100 million in financing, discovering precision small-molecule covalent medicines for immune diseases and cancer on its Advanced Covalent Exploration (ACE) platform. It runs no developer program and markets no product API. This document is an API Evangelist derivation of the WordPress `wp/v2` and `oembed/1.0` route index the site publishes at /wp-json/, restricted to the operations that were verified to return data anonymously on 2026-08-25.
+  description: The read-only content surface Matchpoint Therapeutics exposes at https://matchpointtx.com/wp-json.
   contact:
     name: Matchpoint Therapeutics
     url: https://matchpointtx.com/
@@ -12,13 +12,13 @@ servers:
 - url: https://matchpointtx.com/wp-json
   description: Production content API
 tags:
-- name: search
+- name: Search
   description: Cross-content search across published objects.
 paths:
   /wp/v2/search:
     get:
       tags:
-      - search
+      - Search
       operationId: searchContent
       summary: Search published content
       description: Cross-content search across published objects — posts, pages and the team custom post type. An unfiltered query returned 27 matches at harvest time. Each result is a lightweight pointer (id, title, url, type, subtype) that resolves against the posts, pages or team collections.
@@ -84,12 +84,6 @@ paths:
           $ref: '#/components/responses/BadRequest'
 components:
   parameters:
-    Fields:
-      name: _fields
-      in: query
-      description: Comma-separated allow-list of top-level response fields (WordPress REST global parameter).
-      schema:
-        type: string
     PerPage:
       name: per_page
       in: query
@@ -99,22 +93,6 @@ components:
         minimum: 1
         maximum: 100
         default: 10
-    Page:
-      name: page
-      in: query
-      description: Current page of the collection.
-      schema:
-        type: integer
-        minimum: 1
-        default: 1
-    Exclude:
-      name: exclude
-      in: query
-      description: Ensure result set excludes specific IDs.
-      schema:
-        type: array
-        items:
-          type: integer
     Include:
       name: include
       in: query
@@ -123,6 +101,20 @@ components:
         type: array
         items:
           type: integer
+    Fields:
+      name: _fields
+      in: query
+      description: Comma-separated allow-list of top-level response fields (WordPress REST global parameter).
+      schema:
+        type: string
+    Page:
+      name: page
+      in: query
+      description: Current page of the collection.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
     Context:
       name: context
       in: query
@@ -134,6 +126,14 @@ components:
         - embed
         - edit
         default: view
+    Exclude:
+      name: exclude
+      in: query
+      description: Ensure result set excludes specific IDs.
+      schema:
+        type: array
+        items:
+          type: integer
   schemas:
     Error:
       type: object

@@ -3,7 +3,7 @@ info:
   title: Matchpoint Therapeutics Content Media API
   version: wp/v2
   summary: Anonymously readable WordPress REST content API behind matchpointtx.com.
-  description: The read-only content surface Matchpoint Therapeutics exposes at https://matchpointtx.com/wp-json. Matchpoint Therapeutics is a Cambridge, Massachusetts biotechnology company founded in 2021 and launched publicly in October 2022 with $100 million in financing, discovering precision small-molecule covalent medicines for immune diseases and cancer on its Advanced Covalent Exploration (ACE) platform. It runs no developer program and markets no product API. This document is an API Evangelist derivation of the WordPress `wp/v2` and `oembed/1.0` route index the site publishes at /wp-json/, restricted to the operations that were verified to return data anonymously on 2026-08-25.
+  description: The read-only content surface Matchpoint Therapeutics exposes at https://matchpointtx.com/wp-json.
   contact:
     name: Matchpoint Therapeutics
     url: https://matchpointtx.com/
@@ -12,13 +12,13 @@ servers:
 - url: https://matchpointtx.com/wp-json
   description: Production content API
 tags:
-- name: media
+- name: Media
   description: Media library — 43 image attachments at harvest time.
 paths:
   /wp/v2/media:
     get:
       tags:
-      - media
+      - Media
       operationId: listMedia
       summary: List media attachments
       description: 'Lists the media library — 43 attachments at harvest time, entirely images (22 PNG, 21 JPEG): the logo, team headshots, investor marks and section artwork. source_url on each item resolves to the original file under /wp-content/uploads/.'
@@ -142,7 +142,7 @@ paths:
   /wp/v2/media/{id}:
     get:
       tags:
-      - media
+      - Media
       operationId: getMediaItem
       summary: Retrieve a media attachment
       description: Retrieves a single attachment by numeric ID. IDs are sparse — attachment 1 does not exist on this deployment and returns rest_post_invalid_id — so enumerate through the collection rather than by counting.
@@ -161,43 +161,151 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  parameters:
+    Search:
+      name: search
+      in: query
+      description: Limit results to those matching a string.
+      schema:
+        type: string
+    Include:
+      name: include
+      in: query
+      description: Limit result set to specific IDs.
+      schema:
+        type: array
+        items:
+          type: integer
+    Before:
+      name: before
+      in: query
+      description: Limit response to posts published before a given ISO8601 compliant date.
+      schema:
+        type: string
+        format: date-time
+    Fields:
+      name: _fields
+      in: query
+      description: Comma-separated allow-list of top-level response fields (WordPress REST global parameter).
+      schema:
+        type: string
+    Order:
+      name: order
+      in: query
+      description: Order sort attribute ascending or descending.
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+        default: desc
+    Exclude:
+      name: exclude
+      in: query
+      description: Ensure result set excludes specific IDs.
+      schema:
+        type: array
+        items:
+          type: integer
+    Slug:
+      name: slug
+      in: query
+      description: Limit result set to posts with one or more specific slugs.
+      schema:
+        type: array
+        items:
+          type: string
+    Context:
+      name: context
+      in: query
+      description: Scope under which the request is made; determines fields present in the response. Anonymously only `view` and `embed` return data; `edit` returns 401.
+      schema:
+        type: string
+        enum:
+        - view
+        - embed
+        - edit
+        default: view
+    After:
+      name: after
+      in: query
+      description: Limit response to posts published after a given ISO8601 compliant date.
+      schema:
+        type: string
+        format: date-time
+    PerPage:
+      name: per_page
+      in: query
+      description: Maximum number of items to be returned in the result set.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+    Status:
+      name: status
+      in: query
+      description: Limit result set to posts assigned one or more statuses. Only `publish` is readable anonymously.
+      schema:
+        type: array
+        items:
+          type: string
+          default: publish
+    Page:
+      name: page
+      in: query
+      description: Current page of the collection.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    Embed:
+      name: _embed
+      in: query
+      description: Inline embeddable resources under `_embedded` (WordPress REST global parameter).
+      schema:
+        type: string
+    Offset:
+      name: offset
+      in: query
+      description: Offset the result set by a specific number of items.
+      schema:
+        type: integer
+    ModifiedBefore:
+      name: modified_before
+      in: query
+      description: Limit response to posts modified before a given ISO8601 compliant date.
+      schema:
+        type: string
+        format: date-time
+    Id:
+      name: id
+      in: path
+      required: true
+      description: Unique identifier for the object.
+      schema:
+        type: integer
+    ModifiedAfter:
+      name: modified_after
+      in: query
+      description: Limit response to posts modified after a given ISO8601 compliant date.
+      schema:
+        type: string
+        format: date-time
+  responses:
+    NotFound:
+      description: No object matches the requested identifier (rest_post_invalid_id / rest_term_invalid)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Invalid parameter (rest_invalid_param / rest_missing_callback_param)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    Error:
-      type: object
-      description: The WordPress REST error envelope. Not RFC 9457 problem+json.
-      required:
-      - code
-      - message
-      - data
-      properties:
-        code:
-          type: string
-          description: Machine-readable error code.
-          examples:
-          - rest_post_invalid_id
-        message:
-          type: string
-          description: Human-readable error message.
-          examples:
-          - Invalid post ID.
-        data:
-          type: object
-          properties:
-            status:
-              type: integer
-              description: The HTTP status code.
-              examples:
-              - 404
-            params:
-              type: object
-              description: Per-parameter messages, present on rest_invalid_param.
-              additionalProperties:
-                type: string
-            details:
-              type: object
-              description: Per-parameter structured detail, present on rest_invalid_param.
-              additionalProperties:
-                type: object
     MediaItem:
       type: object
       description: A media-library attachment. 43 at harvest time — 22 image/png and 21 image/jpeg; no documents or video are attached.
@@ -307,147 +415,39 @@ components:
         post:
           type: integer
           description: The ID for the associated post of the attachment.
-  parameters:
-    Before:
-      name: before
-      in: query
-      description: Limit response to posts published before a given ISO8601 compliant date.
-      schema:
-        type: string
-        format: date-time
-    Fields:
-      name: _fields
-      in: query
-      description: Comma-separated allow-list of top-level response fields (WordPress REST global parameter).
-      schema:
-        type: string
-    PerPage:
-      name: per_page
-      in: query
-      description: Maximum number of items to be returned in the result set.
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-        default: 10
-    Embed:
-      name: _embed
-      in: query
-      description: Inline embeddable resources under `_embedded` (WordPress REST global parameter).
-      schema:
-        type: string
-    Slug:
-      name: slug
-      in: query
-      description: Limit result set to posts with one or more specific slugs.
-      schema:
-        type: array
-        items:
+    Error:
+      type: object
+      description: The WordPress REST error envelope. Not RFC 9457 problem+json.
+      required:
+      - code
+      - message
+      - data
+      properties:
+        code:
           type: string
-    Search:
-      name: search
-      in: query
-      description: Limit results to those matching a string.
-      schema:
-        type: string
-    Exclude:
-      name: exclude
-      in: query
-      description: Ensure result set excludes specific IDs.
-      schema:
-        type: array
-        items:
-          type: integer
-    Id:
-      name: id
-      in: path
-      required: true
-      description: Unique identifier for the object.
-      schema:
-        type: integer
-    ModifiedBefore:
-      name: modified_before
-      in: query
-      description: Limit response to posts modified before a given ISO8601 compliant date.
-      schema:
-        type: string
-        format: date-time
-    Status:
-      name: status
-      in: query
-      description: Limit result set to posts assigned one or more statuses. Only `publish` is readable anonymously.
-      schema:
-        type: array
-        items:
+          description: Machine-readable error code.
+          examples:
+          - rest_post_invalid_id
+        message:
           type: string
-          default: publish
-    Order:
-      name: order
-      in: query
-      description: Order sort attribute ascending or descending.
-      schema:
-        type: string
-        enum:
-        - asc
-        - desc
-        default: desc
-    ModifiedAfter:
-      name: modified_after
-      in: query
-      description: Limit response to posts modified after a given ISO8601 compliant date.
-      schema:
-        type: string
-        format: date-time
-    Context:
-      name: context
-      in: query
-      description: Scope under which the request is made; determines fields present in the response. Anonymously only `view` and `embed` return data; `edit` returns 401.
-      schema:
-        type: string
-        enum:
-        - view
-        - embed
-        - edit
-        default: view
-    After:
-      name: after
-      in: query
-      description: Limit response to posts published after a given ISO8601 compliant date.
-      schema:
-        type: string
-        format: date-time
-    Offset:
-      name: offset
-      in: query
-      description: Offset the result set by a specific number of items.
-      schema:
-        type: integer
-    Page:
-      name: page
-      in: query
-      description: Current page of the collection.
-      schema:
-        type: integer
-        minimum: 1
-        default: 1
-    Include:
-      name: include
-      in: query
-      description: Limit result set to specific IDs.
-      schema:
-        type: array
-        items:
-          type: integer
-  responses:
-    NotFound:
-      description: No object matches the requested identifier (rest_post_invalid_id / rest_term_invalid)
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Invalid parameter (rest_invalid_param / rest_missing_callback_param)
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+          description: Human-readable error message.
+          examples:
+          - Invalid post ID.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: The HTTP status code.
+              examples:
+              - 404
+            params:
+              type: object
+              description: Per-parameter messages, present on rest_invalid_param.
+              additionalProperties:
+                type: string
+            details:
+              type: object
+              description: Per-parameter structured detail, present on rest_invalid_param.
+              additionalProperties:
+                type: object

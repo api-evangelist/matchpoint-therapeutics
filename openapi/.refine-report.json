@@ -1,0 +1,46 @@
+{
+  "provider": "matchpoint-therapeutics",
+  "sources": [
+    "_original/matchpoint-therapeutics-comments-openapi.yml",
+    "_original/matchpoint-therapeutics-discovery-openapi.yml",
+    "_original/matchpoint-therapeutics-media-openapi.yml",
+    "_original/matchpoint-therapeutics-oembed-openapi.yml",
+    "_original/matchpoint-therapeutics-pages-openapi.yml",
+    "_original/matchpoint-therapeutics-posts-openapi.yml",
+    "_original/matchpoint-therapeutics-search-openapi.yml",
+    "_original/matchpoint-therapeutics-taxonomy-openapi.yml",
+    "_original/matchpoint-therapeutics-team-openapi.yml"
+  ],
+  "outputs": [
+    "matchpoint-therapeutics-comments-api-openapi.yml",
+    "matchpoint-therapeutics-discovery-api-openapi.yml",
+    "matchpoint-therapeutics-media-api-openapi.yml",
+    "matchpoint-therapeutics-oembed-api-openapi.yml",
+    "matchpoint-therapeutics-pages-api-openapi.yml",
+    "matchpoint-therapeutics-posts-api-openapi.yml",
+    "matchpoint-therapeutics-search-api-openapi.yml",
+    "matchpoint-therapeutics-taxonomy-api-openapi.yml",
+    "matchpoint-therapeutics-team-api-openapi.yml"
+  ],
+  "archived": [
+    "deleted 1 superseded output(s) from the previous generation"
+  ],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (9 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "superseded outputs removed: matchpoint-therapeutics-o-embed-api-openapi.yml",
+    "apis.yml register: written (+1 apis, 9 total)"
+  ],
+  "skipped": [
+    "matchpoint-therapeutics-comments-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "matchpoint-therapeutics-discovery-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "matchpoint-therapeutics-media-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "matchpoint-therapeutics-o-embed-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "matchpoint-therapeutics-pages-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "matchpoint-therapeutics-posts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "matchpoint-therapeutics-search-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "matchpoint-therapeutics-taxonomy-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "matchpoint-therapeutics-team-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

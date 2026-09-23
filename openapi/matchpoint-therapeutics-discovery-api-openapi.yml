@@ -3,7 +3,7 @@ info:
   title: Matchpoint Therapeutics Content Discovery API
   version: wp/v2
   summary: Anonymously readable WordPress REST content API behind matchpointtx.com.
-  description: The read-only content surface Matchpoint Therapeutics exposes at https://matchpointtx.com/wp-json. Matchpoint Therapeutics is a Cambridge, Massachusetts biotechnology company founded in 2021 and launched publicly in October 2022 with $100 million in financing, discovering precision small-molecule covalent medicines for immune diseases and cancer on its Advanced Covalent Exploration (ACE) platform. It runs no developer program and markets no product API. This document is an API Evangelist derivation of the WordPress `wp/v2` and `oembed/1.0` route index the site publishes at /wp-json/, restricted to the operations that were verified to return data anonymously on 2026-08-25.
+  description: The read-only content surface Matchpoint Therapeutics exposes at https://matchpointtx.com/wp-json.
   contact:
     name: Matchpoint Therapeutics
     url: https://matchpointtx.com/
@@ -12,13 +12,13 @@ servers:
 - url: https://matchpointtx.com/wp-json
   description: Production content API
 tags:
-- name: discovery
+- name: Discovery
   description: Route, type, taxonomy and status discovery documents.
 paths:
   /:
     get:
       tags:
-      - discovery
+      - Discovery
       operationId: getRouteIndex
       summary: Retrieve the REST route index
       description: The root discovery document. Returns site identity, the 13 registered namespaces, an empty `authentication` array and the full 222-route map with per-endpoint argument schemas. This is the only machine-readable contract Matchpoint Therapeutics publishes, and every operation in this repo was derived from it.
@@ -41,7 +41,7 @@ paths:
   /wp/v2:
     get:
       tags:
-      - discovery
+      - Discovery
       operationId: getWpV2Index
       summary: Retrieve the wp/v2 namespace index
       description: The route index restricted to the wp/v2 namespace — 118 of the 222 routes.
@@ -57,7 +57,7 @@ paths:
   /wp/v2/types:
     get:
       tags:
-      - discovery
+      - Discovery
       operationId: listTypes
       summary: List registered post types
       description: Lists the registered post types. Twelve are registered; `team` is the only company-specific one, and only post, page, attachment and team carry anonymously readable collections.
@@ -75,7 +75,7 @@ paths:
   /wp/v2/types/{type}:
     get:
       tags:
-      - discovery
+      - Discovery
       operationId: getType
       summary: Retrieve a post type
       description: Retrieves a single post-type descriptor. Verified anonymously against `team`, which reports rest_base `team` and taxonomy `team_types`.
@@ -101,7 +101,7 @@ paths:
   /wp/v2/taxonomies:
     get:
       tags:
-      - discovery
+      - Discovery
       operationId: listTaxonomies
       summary: List registered taxonomies
       description: Lists the registered taxonomies — category, post_tag, nav_menu, wp_pattern_category and team_types.
@@ -124,7 +124,7 @@ paths:
   /wp/v2/taxonomies/{taxonomy}:
     get:
       tags:
-      - discovery
+      - Discovery
       operationId: getTaxonomy
       summary: Retrieve a taxonomy
       description: Retrieves a single taxonomy descriptor. Verified anonymously against `team_types`.
@@ -150,7 +150,7 @@ paths:
   /wp/v2/statuses:
     get:
       tags:
-      - discovery
+      - Discovery
       operationId: listStatuses
       summary: List post statuses
       description: Lists the post statuses visible to the caller. Anonymously only `publish` is returned.
@@ -168,7 +168,7 @@ paths:
   /wp/v2/statuses/{status}:
     get:
       tags:
-      - discovery
+      - Discovery
       operationId: getStatus
       summary: Retrieve a post status
       description: Retrieves a single status descriptor. Verified anonymously against `publish`.
@@ -192,90 +192,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  responses:
-    NotFound:
-      description: No object matches the requested identifier (rest_post_invalid_id / rest_term_invalid)
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
-    Error:
-      type: object
-      description: The WordPress REST error envelope. Not RFC 9457 problem+json.
-      required:
-      - code
-      - message
-      - data
-      properties:
-        code:
-          type: string
-          description: Machine-readable error code.
-          examples:
-          - rest_post_invalid_id
-        message:
-          type: string
-          description: Human-readable error message.
-          examples:
-          - Invalid post ID.
-        data:
-          type: object
-          properties:
-            status:
-              type: integer
-              description: The HTTP status code.
-              examples:
-              - 404
-            params:
-              type: object
-              description: Per-parameter messages, present on rest_invalid_param.
-              additionalProperties:
-                type: string
-            details:
-              type: object
-              description: Per-parameter structured detail, present on rest_invalid_param.
-              additionalProperties:
-                type: object
-    StatusDescriptor:
-      type: object
-      properties:
-        name:
-          type: string
-        public:
-          type: boolean
-        queryable:
-          type: boolean
-        slug:
-          type: string
-        date_floating:
-          type: boolean
-        _links:
-          type: object
-    TypeDescriptor:
-      type: object
-      properties:
-        description:
-          type: string
-        hierarchical:
-          type: boolean
-        has_archive:
-          type: boolean
-        name:
-          type: string
-        slug:
-          type: string
-        icon:
-          type: string
-        taxonomies:
-          type: array
-          items:
-            type: string
-        rest_base:
-          type: string
-        rest_namespace:
-          type: string
-        _links:
-          type: object
     TaxonomyDescriptor:
       type: object
       properties:
@@ -295,6 +212,21 @@ components:
           type: string
         rest_namespace:
           type: string
+        _links:
+          type: object
+    StatusDescriptor:
+      type: object
+      properties:
+        name:
+          type: string
+        public:
+          type: boolean
+        queryable:
+          type: boolean
+        slug:
+          type: string
+        date_floating:
+          type: boolean
         _links:
           type: object
     RouteIndex:
@@ -332,6 +264,74 @@ components:
           description: Route pattern to endpoint descriptor, including per-endpoint `args`.
         _links:
           type: object
+    Error:
+      type: object
+      description: The WordPress REST error envelope. Not RFC 9457 problem+json.
+      required:
+      - code
+      - message
+      - data
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code.
+          examples:
+          - rest_post_invalid_id
+        message:
+          type: string
+          description: Human-readable error message.
+          examples:
+          - Invalid post ID.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: The HTTP status code.
+              examples:
+              - 404
+            params:
+              type: object
+              description: Per-parameter messages, present on rest_invalid_param.
+              additionalProperties:
+                type: string
+            details:
+              type: object
+              description: Per-parameter structured detail, present on rest_invalid_param.
+              additionalProperties:
+                type: object
+    TypeDescriptor:
+      type: object
+      properties:
+        description:
+          type: string
+        hierarchical:
+          type: boolean
+        has_archive:
+          type: boolean
+        name:
+          type: string
+        slug:
+          type: string
+        icon:
+          type: string
+        taxonomies:
+          type: array
+          items:
+            type: string
+        rest_base:
+          type: string
+        rest_namespace:
+          type: string
+        _links:
+          type: object
+  responses:
+    NotFound:
+      description: No object matches the requested identifier (rest_post_invalid_id / rest_term_invalid)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   parameters:
     Context:
       name: context
