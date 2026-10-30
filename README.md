@@ -64,33 +64,104 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Matchpoint Therapeutics is a privately held biotechnology company in Watertown, Massachusetts
-(Cambridge at launch) discovering precision small-molecule covalent medicines for immune diseases
-and cancer on its Advanced Covalent Exploration (ACE) platform. Founded by covalent-chemistry,
-proteomics and computational-science researchers from Stanford University and Harvard Medical
-School, it closed a $30M seed round co-led by Atlas Venture and Access Biotechnology in November
-2021 and launched publicly in October 2022 with $100M in total financing after a $70M Series A led
-by Sanofi Ventures. In July 2025 it entered an exclusive option and licence agreement with Novartis
-for oral covalent inhibitors directed at a transcription factor linked to multiple inflammatory
-diseases.
+Matchpoint Therapeutics is a privately held biotechnology company headquartered in Watertown, Massachusetts — Cambridge at launch — that discovers precision small-molecule covalent medicines intended to transform the treatment of immune diseases and other serious illness. It was founded by covalent-chemistry, proteomics and computational-science researchers from Stanford University and Harvard Medical School, closed a $30 million seed round co-led by Atlas Venture and Access Biotechnology in November 2021, and launched publicly in October 2022 with $100 million in total financing after a $70 million Series A led by Sanofi Ventures with Vertex Ventures HC, Digitalis Ventures and Alexandria Venture Investments. Its proprietary Advanced Covalent Exploration (ACE) platform combines industry-leading chemoproteomics that detects allosteric, transient and cryptic binding pockets in native cells, machine-learning algorithms that prioritise targets and guide medicinal chemistry, and a continuously evolving proprietary library of covalent compounds spanning fragments through drug-like leads. In July 2025 Matchpoint entered an exclusive option and licence agreement with Novartis to develop oral covalent inhibitors against a transcription factor linked to multiple inflammatory diseases, worth up to $60 million upfront and in research funding and up to $1 billion in total potential payments. Matchpoint runs no developer program and publishes no product API, developer portal, API reference or SDK. The only machine-readable surface reachable without credentials is the WordPress REST content API behind matchpointtx.com, catalogued here.
 
-## API surface
+**Areas:** Company · Biotechnology · Pharmaceuticals · Drug Discovery · Immunology · Covalent Chemistry · chemoproteomics · Machine Learning · Life Sciences · content-api
 
-Matchpoint Therapeutics runs **no developer program**. There is no developer portal, no API
-documentation, no API reference, no SDK, no CLI, no MCP server, no agent card, no sandbox, no
-pricing and no sign-up — each verified by probe on 2026-08-25, not assumed.
+## Matchpoint Therapeutics on APIs.io
 
-The only machine-readable surface reachable without credentials is the **WordPress REST content
-API** behind `matchpointtx.com` — 222 routes across 13 namespaces at
-[`/wp-json/`](https://matchpointtx.com/wp-json/). The nine OpenAPI documents in `openapi/` are API
-Evangelist derivations of that live route index, restricted to the operations verified to return
-data anonymously. The richest of them is the `team` custom post type: 19 leadership, board,
-observer and scientific-founder biographies.
+Everything profiled for Matchpoint Therapeutics is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/matchpoint-therapeutics/](https://apis.io/providers/matchpoint-therapeutics/)** — or go straight to one of the APIs or properties below.
 
-## Links
+### APIs (1)
 
-- https://matchpointtx.com/
-- https://matchpointtx.com/feed/
-- https://boards.greenhouse.io/matchpointtx
-- https://www.linkedin.com/company/matchpoint-therapeutics · https://twitter.com/matchpointtx
-- https://www.nasdaqprivatemarket.com/company/matchpoint-therapeutics/ · https://equityzen.com/company/matchpointtherapeutics/
+- [Matchpoint Therapeutics Website (WordPress REST)](https://apis.io/apis/matchpoint-therapeutics/matchpointtx-com-website-wordpress-rest/) — The public WordPress REST API (wp-json) of the Matchpoint Therapeutics website at matchpointtx.com: the route index of the site's content management system,…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [matchpoint-therapeutics](https://apis.io/servers/matchpoint-therapeutics/matchpoint-therapeutics/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Matchpoint Therapeutics Authentication](https://apis.io/security/matchpoint-therapeutics/matchpoint-therapeutics-authentication/)
+- [Matchpoint Therapeutics Domain Security](https://apis.io/security/matchpoint-therapeutics/matchpoint-therapeutics-domain-security/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Matchpoint Therapeutics Plans Pricing](https://apis.io/plans/matchpoint-therapeutics/matchpoint-therapeutics-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Matchpoint Therapeutics Rate Limits](https://apis.io/rate-limits/matchpoint-therapeutics/matchpoint-therapeutics-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://matchpointtx.com/)
+- [Terms of service](https://matchpointtx.com/terms-conditions/)
+- [Privacy policy](https://matchpointtx.com/privacy-policy/)
+
+## API Evangelist rating
+
+**Kin Score 14.7** — emerging · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 69.6 |
+| Contract quality | 0.0 |
+| Contract governance | 4.5 |
+| Operational transparency | 0.0 |
+| Developer ergonomics | 23.2 |
+| Access clarity | 10.5 |
+
+**Agent readiness 6.7** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | — |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | derived (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 15.4** — Health
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/matchpoint-therapeutics/](https://apis.io/providers/matchpoint-therapeutics/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Matchpoint Therapeutics: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/matchpoint-therapeutics/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
